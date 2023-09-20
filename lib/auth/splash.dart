@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:foodhub/auth/welcome.dart';
+import 'package:foodhub/gen/assets.gen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -44,15 +45,14 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                 ],
               ),
-              child: Image.asset(
-                'assets/logo.png',
+              child: Assets.logo.image(
                 width: 100,
               ),
             ),
             const SizedBox(
               height: 12,
             ),
-            Image.asset('assets/brand.png'),
+            Assets.brand.image(),
           ],
         ),
       ),

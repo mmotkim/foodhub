@@ -1,16 +1,29 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:foodhub/auth/login.dart';
 import 'package:foodhub/auth/signup.dart';
 import 'package:foodhub/components/horizontal_separator.dart';
 import 'package:foodhub/components/social_button.dart';
+import 'package:foodhub/gen/assets.gen.dart';
 
-//InkWell , TextButton for buttons
+import '../components/bottom_help_text.dart';
+
 //Gesture
 //seperate css for text
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
+
+  @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +32,8 @@ class WelcomeScreen extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              image: const DecorationImage(
-                  image: AssetImage('assets/images/welcomeBG.png'),
-                  fit: BoxFit.cover),
+              image: DecorationImage(
+                  image: Assets.images.welcomeBG.provider(), fit: BoxFit.cover),
             ),
           ),
           Positioned(
@@ -35,7 +47,7 @@ class WelcomeScreen extends StatelessWidget {
                 style: TextStyle(
                   color: Color(0xFFFE724C),
                   fontSize: 14,
-                  fontFamily: 'Sofia Pro',
+                  fontFamily: 'SofiaPro',
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -51,12 +63,12 @@ class WelcomeScreen extends StatelessWidget {
                 textAlign: TextAlign.left,
                 text: TextSpan(
                   style: TextStyle(
-                      fontFamily: 'SofiaPro',
-                      color: const Color(0xFF111719),
-                      fontSize: 53,
-                      fontWeight: FontWeight.w900,
-                      height: 1.3,
-                      letterSpacing: 0.8),
+                    fontFamily: 'SofiaPro',
+                    color: const Color(0xFF111719),
+                    fontSize: 53,
+                    fontWeight: FontWeight.w700,
+                    height: 1.2,
+                  ),
                   children: const [
                     TextSpan(text: 'Welcome to\n'),
                     TextSpan(
@@ -146,31 +158,15 @@ class WelcomeScreen extends StatelessWidget {
                         color: Color(0xFFFEFEFE),
                         fontSize: 17,
                         fontWeight: FontWeight.w500,
-                        fontFamily: 'Sofia Pro',
+                        fontFamily: 'SofiaPro',
                       ),
                     ),
                   ),
                 ),
                 SizedBox(height: 25),
-                RichText(
-                  textAlign: TextAlign.left,
-                  text: TextSpan(
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontFamily: 'SofiaPro',
-                    ),
-                    children: const [
-                      TextSpan(text: 'Already have an account? '),
-                      TextSpan(
-                        text: 'Sign in',
-                        style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
-                ),
+                BottomHelpText.welcome(onpressed: () {
+                  Navigator.of(context).push(_createRoute(LoginScreen()));
+                }),
               ],
             ),
           ),

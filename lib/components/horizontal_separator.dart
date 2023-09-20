@@ -1,6 +1,7 @@
 // ignore_for_file: use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
+import 'package:foodhub/styles/custom_texts.dart';
 
 class HorizontalSeparator extends StatelessWidget {
   const HorizontalSeparator({
@@ -28,11 +29,7 @@ class HorizontalSeparator extends StatelessWidget {
         const SizedBox(width: 20.0),
         Text(
           text,
-          style: TextStyle(
-            fontFamily: 'SofiaPro',
-            fontSize: 15.0,
-            color: color,
-          ),
+          style: CustomTextStyle.labelMedium(context).copyWith(color: color),
         ),
         const SizedBox(width: 10.0),
         Container(
