@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 
-class PrimaryButton extends StatelessWidget {
+class PrimaryButton extends StatefulWidget {
   const PrimaryButton({
     super.key,
     required this.text,
+    required this.onPressed,
   });
   final String text;
+  final GestureTapCallback onPressed;
 
+  @override
+  State<PrimaryButton> createState() => _PrimaryButtonState();
+}
+
+class _PrimaryButtonState extends State<PrimaryButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,14 +33,14 @@ class PrimaryButton extends StatelessWidget {
         ],
       ),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: widget.onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor:
               Colors.transparent, // Make the ElevatedButton transparent
           shadowColor: Colors.transparent, // Remove shadow
         ),
         child: Text(
-          text,
+          widget.text,
           style: const TextStyle(
             color: Color(0xFFFEFEFE),
             fontSize: 15,

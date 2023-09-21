@@ -1,13 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:foodhub/auth/login.dart';
-import 'package:foodhub/auth/signup.dart';
+import 'package:foodhub/auth/views/login.dart';
+import 'package:foodhub/auth/views/signup.dart';
 import 'package:foodhub/components/horizontal_separator.dart';
 import 'package:foodhub/components/social_button.dart';
 import 'package:foodhub/gen/assets.gen.dart';
 
-import '../components/bottom_help_text.dart';
+import '../../components/bottom_help_text.dart';
 
 //Gesture
 //seperate css for text
@@ -36,6 +36,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   image: Assets.images.welcomeBG.provider(), fit: BoxFit.cover),
             ),
           ),
+          //skip button
           Positioned(
             right: 20,
             top: 10,
@@ -53,33 +54,30 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
             ),
           ),
+          //title
           Positioned(
             top: 140.0,
             left: 30.0,
-            child: SizedBox(
-              width: 318,
-              height: 122,
-              child: RichText(
-                textAlign: TextAlign.left,
-                text: TextSpan(
-                  style: TextStyle(
-                    fontFamily: 'SofiaPro',
-                    color: const Color(0xFF111719),
-                    fontSize: 53,
-                    fontWeight: FontWeight.w700,
-                    height: 1.2,
-                  ),
-                  children: const [
-                    TextSpan(text: 'Welcome to\n'),
-                    TextSpan(
-                      text: 'FoodHub',
-                      style: TextStyle(
-                        color: Color(0xFFFE724C),
-                        fontSize: 45,
-                      ),
-                    ),
-                  ],
+            child: RichText(
+              textAlign: TextAlign.left,
+              text: TextSpan(
+                style: TextStyle(
+                  fontFamily: 'SofiaPro',
+                  color: const Color(0xFF111719),
+                  fontSize: 53,
+                  fontWeight: FontWeight.w700,
+                  height: 1.2,
                 ),
+                children: const [
+                  TextSpan(text: 'Welcome to\n'),
+                  TextSpan(
+                    text: 'FoodHub',
+                    style: TextStyle(
+                      color: Color(0xFFFE724C),
+                      fontSize: 45,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

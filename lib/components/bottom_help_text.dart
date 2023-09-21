@@ -4,7 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:foodhub/styles/custom_texts.dart';
 
-class BottomHelpText extends StatefulWidget {
+class BottomHelpText extends StatelessWidget {
   const BottomHelpText({
     required this.text,
     required this.actionText,
@@ -46,36 +46,31 @@ class BottomHelpText extends StatefulWidget {
             onPressed: onPressed);
 
   @override
-  State<BottomHelpText> createState() => _BottomHelpTextState();
-}
-
-class _BottomHelpTextState extends State<BottomHelpText> {
-  @override
   Widget build(BuildContext context) {
     return RichText(
       textAlign: TextAlign.left,
       text: TextSpan(
-        style: widget.fontSize != null
+        style: fontSize != null
             ? CustomTextStyle.labelMedium(context).copyWith(
-                color: widget.color,
-                fontSize: widget.fontSize,
+                color: color,
+                fontSize: fontSize,
               )
             : CustomTextStyle.labelMedium(context).copyWith(
-                color: widget.color,
+                color: color,
               ),
         // style: TextStyle(
         //     fontSize: 14,
         //     fontFamily: 'SofiaPro',
         //     fontWeight: FontWeight.w400),
         children: [
-          TextSpan(text: widget.text),
+          TextSpan(text: text),
           TextSpan(
-            text: widget.actionText,
+            text: actionText,
             style: TextStyle(
-                decoration: widget.isUnderlined,
+                decoration: isUnderlined,
                 fontWeight: FontWeight.w500,
-                color: widget.actionColor),
-            recognizer: TapGestureRecognizer()..onTap = widget.onPressed,
+                color: actionColor),
+            recognizer: TapGestureRecognizer()..onTap = onPressed,
           ),
         ],
       ),
