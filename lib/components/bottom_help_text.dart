@@ -2,6 +2,7 @@
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:foodhub/styles/custom_colors.dart';
 import 'package:foodhub/styles/custom_texts.dart';
 
 class BottomHelpText extends StatelessWidget {
@@ -41,7 +42,7 @@ class BottomHelpText extends StatelessWidget {
             text: text,
             actionText: actionText,
             color: const Color(0xFF5B5B5E),
-            actionColor: const Color(0xFFFE724C),
+            actionColor: CustomColors.primary,
             isUnderlined: TextDecoration.none,
             onPressed: onPressed);
 

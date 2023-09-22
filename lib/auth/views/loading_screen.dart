@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/auth/views/verification.dart';
-import 'package:foodhub/components/primary_button.dart';
 import 'package:foodhub/components/secondary_button.dart';
+import 'package:foodhub/styles/custom_texts.dart';
 import 'package:provider/provider.dart';
 
 class LoadingScreen extends StatefulWidget {
@@ -23,6 +23,18 @@ class _LoadingScreenState extends State<LoadingScreen> {
       setState(() {
         completed = true;
       });
+      final authProvider = Provider.of<AuthController>(context, listen: false);
+
+      if (completed && authProvider.errorMessage == null) {
+        Future.delayed(const Duration(seconds: 1), () {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => const VerificationScreen(),
+            ),
+            (Route<dynamic> route) => false,
+          );
+        });
+      }
     });
   }
 
@@ -41,31 +53,36 @@ class _LoadingScreenState extends State<LoadingScreen> {
                     ? const Icon(
                         Icons.close,
                         color: Colors.red,
-                        size: 64.0,
+                        size: 50.0,
                       )
                     : const Icon(
                         Icons.check,
                         color: Colors.green,
-                        size: 64.0,
+                        size: 50.0,
                       )
-                : const Column(
+                : Column(
                     children: [
-                      CircularProgressIndicator(),
-                      SizedBox(height: 10),
-                      Text('Setting up your account'),
+                      const CircularProgressIndicator(color: Color(0xFFFE724C)),
+                      const SizedBox(height: 20),
+                      Text(
+                        'Setting up your account',
+                        style: CustomTextStyle.labellarge(context)
+                            .copyWith(color: const Color(0xFFFE724C)),
+                      ),
                     ],
                   ),
-            const SizedBox(height: 15),
             if (completed)
               authProvider.errorMessage != null
                   ? Column(
                       children: [
+                        const SizedBox(height: 10),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 26),
                           child: Text(
                             authProvider.errorMessage!,
                             textAlign: TextAlign.center,
-                            style: const TextStyle(color: Colors.red),
+                            style: CustomTextStyle.labellarge(context)
+                                .copyWith(color: Colors.red),
                           ),
                         ),
                         const SizedBox(height: 30),
@@ -76,16 +93,31 @@ class _LoadingScreenState extends State<LoadingScreen> {
                             })
                       ],
                     )
-                  : PrimaryButton(
-                      text: 'CONTINUE',
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const VerificationScreen(),
-                            ));
-                      },
-                    )
+                  : Column(
+                      children: [
+                        const SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 26),
+                          child: Text(
+                            'Account creation complete!',
+                            textAlign: TextAlign.center,
+                            style: CustomTextStyle.labellarge(context)
+                                .copyWith(color: Colors.green),
+                          ),
+                        ),
+                        // PrimaryButton(
+                        //   text: 'CONTINUE',
+                        //   onPressed: () {
+                        //     Navigator.pushReplacement(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //           builder: (context) =>
+                        //               const VerificationScreen(),
+                        //         ));
+                        //   },
+                        // ),
+                      ],
+                    ),
           ],
         ),
       ),

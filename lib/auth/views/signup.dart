@@ -1,13 +1,13 @@
 // ignore_for_file: avoid_print
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/auth/views/login.dart';
-import 'package:foodhub/components/back_button.dart';
 import 'package:foodhub/components/big_field.dart';
 import 'package:foodhub/components/bottom_help_text.dart';
+import 'package:foodhub/components/form_submit_button.dart';
 import 'package:foodhub/components/horizontal_separator.dart';
-import 'package:foodhub/components/primary_button.dart';
 import 'package:foodhub/components/social_button.dart';
 import 'package:foodhub/gen/assets.gen.dart';
 import 'package:foodhub/styles/custom_texts.dart';
@@ -17,11 +17,13 @@ import 'package:foodhub/auth/views/loading_screen.dart';
 
 //check responsiveness
 //more customizable parameters for field
-//submit button disableable
-//multilanguage
-//add google's
-//custom colors
+
+//submit button disableable X & added sign in
+//multilanguage, used shared_preferences package for persisting package X
+//custom colors X
 //seperate validators
+//fix validation message location
+//add google's
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
@@ -92,31 +94,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                // Decorative Asset (Replace with your image)
-                Stack(
-                  children: [
-                    //Decoration
-                    Container(
-                      height: 80,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: Assets.topDeco.provider(),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                //Decoration
+                Container(
+                  height: 80,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: Assets.topDeco.provider(),
+                      fit: BoxFit.cover,
                     ),
-                    //Back button
-                    const NavPopButton(),
-                  ],
+                  ),
                 ),
                 const SizedBox(height: 8.0),
+
                 // Sign Up Heading Title
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 26.0),
                   child: Text(
-                    'Sign Up',
+                    'signUp',
                     style: CustomTextStyle.headlineLarge(context),
-                  ),
+                  ).tr(),
                 ),
                 const SizedBox(height: 20.0),
                 // Full name field
@@ -124,7 +120,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   hintText: 'First and Last name',
                   obscureText: false, //obscureText
                   textInputType: TextInputType.text,
-                  label: 'Full name',
+                  label: 'fullName'.tr(),
                   formName: 'name',
                   controller: nameController,
                 ),
@@ -133,18 +129,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 BigField.email(
                   formName: 'email',
                   controller: emailController,
+                  label: 'email'.tr(),
                 ),
                 // Password Field
                 const SizedBox(height: 18.0), // Spacing
                 BigField.password(
                   formName: 'password',
                   controller: passwordController,
+                  label: 'pass'.tr(),
                 ),
                 // Sign-Up Button
                 const SizedBox(height: 33.0), // Spacing
 
                 Center(
-                  child: PrimaryButton(
+                  child: FormSubmitButton(
                     text: 'SIGN UP',
                     onPressed: _handleSignUp,
                   ),
@@ -183,6 +181,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
                 const SizedBox(height: 28),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        context.setLocale(const Locale('en'));
+                      },
+                      child: const Text('English'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        context.setLocale(const Locale('vi'));
+                      },
+                      child: const Text('twat'),
+                    )
+                  ],
+                )
               ],
             ),
           ),

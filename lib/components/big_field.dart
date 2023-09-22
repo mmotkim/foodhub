@@ -1,6 +1,8 @@
 // ignore_for_file: use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
+import 'package:foodhub/styles/custom_colors.dart';
+
 import 'package:reactive_forms/reactive_forms.dart';
 
 class BigField extends StatefulWidget {
@@ -21,21 +23,21 @@ class BigField extends StatefulWidget {
     required this.controller,
   }) : super(key: key);
 
-  const BigField.password({formName, controller})
+  const BigField.password({formName, controller, label})
       : this(
             hintText: 'A super secret password',
             obscureText: true,
             textInputType: TextInputType.text,
-            label: 'Password',
+            label: label,
             formName: formName,
             controller: controller);
 
-  const BigField.email({formName, controller})
+  const BigField.email({formName, controller, label})
       : this(
             hintText: 'example@mail.com',
             obscureText: false,
             textInputType: TextInputType.emailAddress,
-            label: 'E-mail',
+            label: label,
             formName: formName,
             controller: controller);
 
@@ -124,7 +126,7 @@ class _BigFieldState extends State<BigField> {
                 hintText: widget.hintText,
                 hintStyle: TextStyle(color: Colors.grey.shade300),
                 contentPadding: const EdgeInsets.all(20),
-                focusColor: const Color(0xFFFE724C),
+                focusColor: CustomColors.primary,
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: const BorderSide(
@@ -134,7 +136,7 @@ class _BigFieldState extends State<BigField> {
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: const BorderSide(
-                    color: Color(0xFFFE724C),
+                    color: CustomColors.primary,
                     width: 1.5,
                   ),
                 ),

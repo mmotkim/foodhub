@@ -9,6 +9,14 @@ class CustomTextStyle {
     );
   }
 
+  static TextStyle labellarge(BuildContext context) {
+    return const TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w400,
+      fontFamily: 'SofiaPro',
+    );
+  }
+
   static TextStyle bodySmall(BuildContext context) {
     return Theme.of(context).textTheme.bodySmall!.copyWith(
           color: const Color(0xFF9796A1),

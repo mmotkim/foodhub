@@ -36,7 +36,7 @@ class VerificationScreen extends StatelessWidget {
                       const SizedBox(height: 8.0),
                       // Sign Up Heading Title
                       Text(
-                        'Verification Code',
+                        'Home Sweet Home',
                         style: CustomTextStyle.headlineLarge(context),
                       ),
                       const SizedBox(height: 12),

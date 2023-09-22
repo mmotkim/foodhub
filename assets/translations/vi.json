@@ -1,0 +1,20 @@
+{
+    "helloWorld": "Xin chào thế giới!",
+    "welcomeTo": "Chào mừng đến",
+    "welcomeBody": "Món ngon giao tận cửa bạn qua một cú nhấp.",
+    "foodHub": "FoodHub",
+    "signInWith": "Đăng nhập bằng",
+    "signUpWith": "Đăng ký bằng",
+    "signInEmail": "Đăng nhập bằng email hoặc điện thoại",
+    "alreadyAccount": "Đã có tài khoản",
+    "dontAccount": "Chưa có tài khoản",
+    "signIn": "Đăng nhập",
+    "signUp": "Đăng ký",
+    "fullName": "Họ và tên",
+    "email": "E-mail",
+    "pass": "Mật khẩu",
+    "login": "Đăng nhập",
+    "forgotPassword": "Quên mật khẩu",
+    "passGuide": "Mật khẩu siêu bí mật"
+  }
+  

@@ -6,32 +6,46 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   // runApp(const MyApp());
   // runApp(ChangeNotifierProvider(
   //   create: (context) => AuthController(),
   //   builder: ((context, child) => const MyApp()),
   // ));
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => AuthController())
-      ],
-      child: const MyApp(),
+    EasyLocalization(
+      supportedLocales: const [Locale('en'), Locale('vi')],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('vi'),
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => AuthController())
+        ],
+        child: const MyApp(),
+      ),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return ReactiveFormConfig(
@@ -50,6 +64,9 @@ class MyApp extends StatelessWidget {
           fontFamily: 'SofiaPro',
           useMaterial3: true,
         ),
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
         routes: {'main_menu': (context) => const MainMemu()},
         home: const SplashScreen(),
       ),

@@ -1,0 +1,20 @@
+{
+    "helloWorld": "Hello World!",
+    "welcomeTo": "Welcome to",
+    "welcomeBody": "Your favourite foods delivered fast to your door.",
+    "foodHub": "FoodHub",
+    "signInWith": "sign in with",
+    "signUpWith": "Sign up with",
+    "signInEmail": "Sign in with email or phone",
+    "alreadyAccount": "Already have an account",
+    "dontAccount": "Don't have an account",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "fullName": "Full name",
+    "email": "E-mail",
+    "pass": "Password",
+    "login": "Login",
+    "forgotPassword": "Forgot password",
+    "passGuide": "A super secret password"
+  }
+  

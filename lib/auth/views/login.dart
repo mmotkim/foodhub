@@ -1,12 +1,17 @@
+// ignore_for_file: unused_element, avoid_print
+
 import 'package:flutter/material.dart';
+import 'package:foodhub/auth/controllers/auth_controller.dart';
+import 'package:foodhub/auth/views/loading_screen.dart';
 import 'package:foodhub/auth/views/signup.dart';
 import 'package:foodhub/components/big_field.dart';
 import 'package:foodhub/components/bottom_help_text.dart';
+import 'package:foodhub/components/form_submit_button.dart';
 import 'package:foodhub/components/horizontal_separator.dart';
-import 'package:foodhub/components/primary_button.dart';
 import 'package:foodhub/components/social_button.dart';
 import 'package:foodhub/gen/assets.gen.dart';
 import 'package:foodhub/styles/custom_texts.dart';
+import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../components/back_button.dart';
@@ -58,6 +63,33 @@ class _LoginScreenState extends State<LoginScreen> {
       Validators.required,
     ]),
   });
+
+  void _handleSignUp() async {
+    final authProvider = Provider.of<AuthController>(context, listen: false);
+
+    if (form.valid) {
+      try {
+        //get input
+        final email = emailController.text.trim();
+        final password = passwordController.text.trim();
+        print(email);
+
+        //go to loading screen
+        Navigator.of(context).push(_createRoute(const LoadingScreen()));
+
+        //await firebase signup
+        final result = await authProvider.signIn(email, password);
+        print(result.user?.email);
+
+        //clear message in case of return
+        authProvider.clearErrorMessage();
+      } catch (err) {
+        print('Error during sign-up: $err');
+      } finally {}
+    } else {
+      print('form is shit');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,9 +146,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           actionText: 'Forgot password?',
                           onPressed: () {}),
                       const SizedBox(height: 25),
-                      PrimaryButton(
+                      FormSubmitButton(
                         text: 'LOGIN',
-                        onPressed: validateAndSave,
+                        onPressed: _handleSignUp,
                       ),
                       const SizedBox(height: 20),
                       BottomHelpText.light(
