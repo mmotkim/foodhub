@@ -15,6 +15,7 @@
     "pass": "Password",
     "login": "Login",
     "forgotPassword": "Forgot password",
-    "passGuide": "A super secret password"
+    "passGuide": "A super secret password",
+    "nameGuide": "First and Last Name"
   }
   

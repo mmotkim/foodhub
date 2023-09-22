@@ -23,9 +23,9 @@ class BigField extends StatefulWidget {
     required this.controller,
   }) : super(key: key);
 
-  const BigField.password({formName, controller, label})
+  const BigField.password({hintText, formName, controller, label})
       : this(
-            hintText: 'A super secret password',
+            hintText: hintText,
             obscureText: true,
             textInputType: TextInputType.text,
             label: label,

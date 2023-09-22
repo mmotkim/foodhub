@@ -23,10 +23,11 @@ class BottomHelpText extends StatelessWidget {
   final double? fontSize;
   final GestureTapCallback onPressed;
 
-  const BottomHelpText.welcome({onpressed})
+  const BottomHelpText.welcome(
+      {required text, required actionText, required onpressed})
       : this(
-          text: 'Already have an account? ',
-          actionText: 'Sign in',
+          text: text,
+          actionText: actionText,
           color: Colors.white,
           actionColor: Colors.white,
           isUnderlined: TextDecoration.underline,

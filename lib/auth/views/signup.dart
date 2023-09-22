@@ -11,6 +11,7 @@ import 'package:foodhub/components/horizontal_separator.dart';
 import 'package:foodhub/components/social_button.dart';
 import 'package:foodhub/gen/assets.gen.dart';
 import 'package:foodhub/styles/custom_texts.dart';
+import 'package:foodhub/utils/input_validation.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:foodhub/auth/views/loading_screen.dart';
@@ -21,7 +22,7 @@ import 'package:foodhub/auth/views/loading_screen.dart';
 //submit button disableable X & added sign in
 //multilanguage, used shared_preferences package for persisting package X
 //custom colors X
-//seperate validators
+//seperate validators X
 //fix validation message location
 //add google's
 class SignUpScreen extends StatefulWidget {
@@ -38,18 +39,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   //input validations
   final form = FormGroup({
-    'name': FormControl<String>(
-      validators: [
-        Validators.required,
-      ],
-    ),
-    'email': FormControl<String>(validators: [
-      Validators.required,
-      Validators.email,
-    ]),
-    'password': FormControl<String>(validators: [
-      Validators.required,
-    ]),
+    'name': InputValidation.name,
+    'email': InputValidation.email,
+    'password': InputValidation.password,
   });
 
   void _handleSignUp() async {
@@ -117,7 +109,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(height: 20.0),
                 // Full name field
                 BigField(
-                  hintText: 'First and Last name',
+                  hintText: 'nameGuide'.tr(),
                   obscureText: false, //obscureText
                   textInputType: TextInputType.text,
                   label: 'fullName'.tr(),
@@ -134,6 +126,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 // Password Field
                 const SizedBox(height: 18.0), // Spacing
                 BigField.password(
+                  hintText: 'passGuide'.tr(),
                   formName: 'password',
                   controller: passwordController,
                   label: 'pass'.tr(),
@@ -143,7 +136,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 Center(
                   child: FormSubmitButton(
-                    text: 'SIGN UP',
+                    text: 'signUp'.tr(),
                     onPressed: _handleSignUp,
                   ),
                 ),
@@ -152,8 +145,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(height: 20.0), // Spacing
                 Center(
                   child: BottomHelpText.light(
-                    text: 'Already have an account? ',
-                    actionText: 'Login',
+                    text: '${'alreadyAccount'.tr()}?  ',
+                    actionText: 'login'.tr(),
                     onPressed: () {
                       Navigator.of(context)
                           .push(_createRoute(const LoginScreen()));
@@ -163,7 +156,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 const SizedBox(height: 50.0), // Spacing
                 // Sign in with Text and Vertical Lines
-                const HorizontalSeparator.dark(),
+                HorizontalSeparator.dark(text: 'signUpWith'.tr()),
                 const SizedBox(height: 15.0), // Spacing
 
                 const Padding(

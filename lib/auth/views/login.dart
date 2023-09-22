@@ -1,5 +1,6 @@
 // ignore_for_file: unused_element, avoid_print
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/auth/views/loading_screen.dart';
@@ -11,6 +12,7 @@ import 'package:foodhub/components/horizontal_separator.dart';
 import 'package:foodhub/components/social_button.dart';
 import 'package:foodhub/gen/assets.gen.dart';
 import 'package:foodhub/styles/custom_texts.dart';
+import 'package:foodhub/utils/input_validation.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -27,41 +29,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void validateAndSave() {
-    // setState(() {
-    //   print("aaa ${passwordController.text}");
-    // });
-    // // final FormState form = _formKey.currentState!;
-    // if (form.validate()) {
-    //   // print('Form is valid');
-    // } else {
-    //   // print('Form is invalid');
-    // }
-
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //       builder: (context) => MainMemu(
-    //             name: "test",
-    //             email: emailController.text,
-    //             password: passwordController.text,
-    //           )),
-    // );
-
-    // Navigator.pushNamed(context, 'main_menu', arguments: {
-    //   'email': emailController.text,
-    //   'password': passwordController.text
-    // });
-  }
-
   final form = FormGroup({
-    'email': FormControl<String>(validators: [
-      Validators.required,
-      Validators.email,
-    ]),
-    'password': FormControl<String>(validators: [
-      Validators.required,
-    ]),
+    'email': InputValidation.email,
+    'password': InputValidation.password,
   });
 
   void _handleSignUp() async {
@@ -127,39 +97,47 @@ class _LoginScreenState extends State<LoginScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 26.0),
                   child: Text(
-                    'Login',
+                    'login'.tr(),
                     style: CustomTextStyle.headlineLarge(context),
                   ),
                 ),
                 const SizedBox(height: 28.0),
-                BigField.email(formName: 'email', controller: emailController),
+                BigField.email(
+                  formName: 'email',
+                  controller: emailController,
+                  label: 'email'.tr(),
+                ),
 
                 const SizedBox(height: 28.0),
                 BigField.password(
-                    formName: 'password', controller: passwordController),
+                  hintText: 'passGuide'.tr(),
+                  formName: 'password',
+                  controller: passwordController,
+                  label: 'pass'.tr(),
+                ),
                 const SizedBox(height: 28),
                 Center(
                   child: Column(
                     children: [
                       BottomHelpText.light(
                           text: '',
-                          actionText: 'Forgot password?',
+                          actionText: '${'forgotPassword'.tr()}?',
                           onPressed: () {}),
                       const SizedBox(height: 25),
                       FormSubmitButton(
-                        text: 'LOGIN',
+                        text: 'login'.tr(),
                         onPressed: _handleSignUp,
                       ),
                       const SizedBox(height: 20),
                       BottomHelpText.light(
-                          text: 'Don\'t have an account? ',
-                          actionText: 'Sign Up',
+                          text: '${'dontAccount'.tr()}?  ',
+                          actionText: 'signUp'.tr(),
                           onPressed: () {
                             Navigator.of(context).pushReplacement(
                                 _createRoute(const SignUpScreen()));
                           }),
                       const SizedBox(height: 50),
-                      const HorizontalSeparator.dark(),
+                      HorizontalSeparator.dark(text: 'signInWith'.tr()),
                       const SizedBox(height: 15),
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 26),

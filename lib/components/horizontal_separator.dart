@@ -11,10 +11,10 @@ class HorizontalSeparator extends StatelessWidget {
   });
   final Color color;
   final String text;
-  const HorizontalSeparator.dark()
-      : this(color: const Color(0xFF5B5B5E), text: 'sign up with');
-  const HorizontalSeparator.light()
-      : this(color: Colors.white, text: 'Sign in with');
+  const HorizontalSeparator.dark({required text})
+      : this(color: const Color(0xFF5B5B5E), text: text);
+  const HorizontalSeparator.light({required text})
+      : this(color: Colors.white, text: text);
 
   @override
   Widget build(BuildContext context) {

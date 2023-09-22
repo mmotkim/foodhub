@@ -123,7 +123,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             left: 0.0,
             right: 0.0,
             child: Center(
-              child: HorizontalSeparator.light(),
+              child: HorizontalSeparator.light(text: 'signInWith'.tr()),
             ),
           ),
           // Login Buttons at the Bottom
@@ -163,21 +163,30 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           .transparent, // Make the ElevatedButton transparent
                       shadowColor: Colors.transparent, // Remove shadow
                     ),
-                    child: Text(
-                      'Start with email or phone',
-                      style: TextStyle(
-                        color: Color(0xFFFEFEFE),
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'SofiaPro',
-                      ),
-                    ),
+                    child: Text('signInEmail'.tr(),
+                        style: context.locale.languageCode == 'en'
+                            ? TextStyle(
+                                color: Color(0xFFFEFEFE),
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'SofiaPro',
+                              )
+                            : TextStyle(
+                                color: Color(0xFFFEFEFE),
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'SofiaPro',
+                              )),
                   ),
                 ),
                 SizedBox(height: 25),
-                BottomHelpText.welcome(onpressed: () {
-                  Navigator.of(context).push(_createRoute(LoginScreen()));
-                }),
+                BottomHelpText.welcome(
+                  onpressed: () {
+                    Navigator.of(context).push(_createRoute(LoginScreen()));
+                  },
+                  text: '${'alreadyAccount'.tr()}?  ',
+                  actionText: 'signIn'.tr(),
+                ),
               ],
             ),
           ),
