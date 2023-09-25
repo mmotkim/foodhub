@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:foodhub/auth/views/welcome.dart';
+import 'package:foodhub/views/welcome/welcome.dart';
 import 'package:foodhub/gen/assets.gen.dart';
 
 class SplashScreen extends StatefulWidget {

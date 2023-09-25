@@ -2,8 +2,8 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:foodhub/auth/views/login.dart';
-import 'package:foodhub/auth/views/signup.dart';
+import 'package:foodhub/views/login/login.dart';
+import 'package:foodhub/views/signup/signup.dart';
 import 'package:foodhub/components/horizontal_separator.dart';
 import 'package:foodhub/components/social_button.dart';
 import 'package:foodhub/gen/assets.gen.dart';

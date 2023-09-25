@@ -1,10 +1,33 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class InputValidation {
   static FormControl<String> password = FormControl<String>(
     validators: [
       Validators.required,
-      Validators.minLength(6),
+      Validators.minLength(8),
+      Validators.maxLength(16),
+      Validators.pattern(r'^(?=.*[0-9]).+$',
+          validationMessage: LocaleKeys.passwordOneNumber),
+      Validators.pattern(r'^(?=.*[A-Z]).+$',
+          validationMessage: LocaleKeys.passwordOneUppercase),
+      Validators.pattern(r'^(?=.*[a-z]).+$',
+          validationMessage: LocaleKeys.passwordOneUppercase),
+      Validators.pattern(r'^(?=.*[^a-zA-Z0-9]).+$',
+          validationMessage:
+              // r'Please include at least one special character (e.g., @, #, $) in your password'),
+              LocaleKeys.passwordOneSpecialCharacter),
+      Validators.pattern(r'^\S+$',
+          // validationMessage: 'Password should not contain any space character')
+          validationMessage: LocaleKeys.passwordContainsSpace),
+    ],
+  );
+  static FormControl<String> passwordLogin = FormControl<String>(
+    validators: [
+      Validators.required,
+      Validators.pattern(r'^\S+$',
+          validationMessage: 'Password should not contain any space character')
     ],
   );
 
@@ -20,4 +43,33 @@ class InputValidation {
       Validators.required,
     ],
   );
+
+  static Map<String, String Function(Object)> passwordSignUpMap = {
+    LocaleKeys.required: (error) => LocaleKeys.required.tr(),
+    LocaleKeys.passwordContainsSpace: (error) =>
+        LocaleKeys.passwordContainsSpace.tr(),
+    LocaleKeys.passwordOneLowercase: (error) =>
+        LocaleKeys.passwordOneLowercase.tr(),
+    LocaleKeys.passwordOneNumber: (error) => LocaleKeys.passwordOneNumber.tr(),
+    LocaleKeys.passwordOneSpecialCharacter: (error) =>
+        LocaleKeys.passwordOneSpecialCharacter.tr(),
+    LocaleKeys.passwordOneUppercase: (error) =>
+        LocaleKeys.passwordOneUppercase.tr(),
+    LocaleKeys.passwordTooLong: (error) => LocaleKeys.passwordTooLong.tr(),
+    LocaleKeys.passwordTooShort: (error) => LocaleKeys.passwordTooShort.tr(),
+  };
+
+  static Map<String, String Function(Object)> passwordSignInMap = {
+    LocaleKeys.required: (error) => LocaleKeys.required.tr(),
+    LocaleKeys.passwordContainsSpace: (error) => LocaleKeys.required.tr(),
+  };
+
+  static Map<String, String Function(Object)> emailMap = {
+    LocaleKeys.required: (error) => LocaleKeys.required.tr(),
+    LocaleKeys.emailWrongFormat: (error) => LocaleKeys.emailWrongFormat.tr(),
+  };
+
+  static Map<String, String Function(Object)> nameMap = {
+    LocaleKeys.required: (error) => LocaleKeys.required.tr(),
+  };
 }

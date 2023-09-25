@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
-import 'package:foodhub/auth/views/main_menu.dart';
-import 'package:foodhub/auth/views/splash.dart';
+import 'package:foodhub/views/main_menu.dart';
+import 'package:foodhub/views/splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +24,7 @@ Future<void> main() async {
   runApp(
     EasyLocalization(
       supportedLocales: const [Locale('en'), Locale('vi')],
-      path: 'assets/translations',
+      path: 'assets/i18n',
       fallbackLocale: const Locale('vi'),
       child: MultiProvider(
         providers: [
@@ -48,28 +48,22 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ReactiveFormConfig(
-      validationMessages: {
-        ValidationMessage.required: (error) => 'This must not be empty',
-        ValidationMessage.email: (error) => 'This is not a valid email',
-      },
-      child: MaterialApp(
-        title: 'Flutter FoodHub',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFFE724C)),
-          textSelectionTheme: const TextSelectionThemeData(
-            cursorColor: Color(0xFFFE724C),
-            selectionHandleColor: Color(0xFFFE724C),
-          ),
-          fontFamily: 'SofiaPro',
-          useMaterial3: true,
+    return MaterialApp(
+      title: 'Flutter FoodHub',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFFE724C)),
+        textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: Color(0xFFFE724C),
+          selectionHandleColor: Color(0xFFFE724C),
         ),
-        localizationsDelegates: context.localizationDelegates,
-        supportedLocales: context.supportedLocales,
-        locale: context.locale,
-        routes: {'main_menu': (context) => const MainMemu()},
-        home: const SplashScreen(),
+        fontFamily: 'SofiaPro',
+        useMaterial3: true,
       ),
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
+      routes: {'main_menu': (context) => const MainMemu()},
+      home: const SplashScreen(),
     );
   }
 }

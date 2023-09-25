@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
-import 'package:foodhub/auth/views/verification.dart';
+import 'package:foodhub/views/verification/verification.dart';
 import 'package:foodhub/components/secondary_button.dart';
 import 'package:foodhub/styles/custom_texts.dart';
 import 'package:provider/provider.dart';

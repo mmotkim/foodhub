@@ -33,4 +33,11 @@ class CustomTextStyle {
           height: 1.2,
         );
   }
+
+  static TextStyle fieldText = const TextStyle(
+    color: Color(0xFF111719),
+    fontSize: 17,
+    fontWeight: FontWeight.w500,
+    fontFamily: 'SofiaPro',
+  );
 }
