@@ -1,9 +1,11 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, unused_import
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
+import 'package:foodhub/auth/controllers/error_controller.dart';
 import 'package:foodhub/components/primary_button.dart';
+import 'package:foodhub/components/secondary_button.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/styles/animated_routes.dart';
 import 'package:foodhub/views/login/login.dart';
@@ -15,9 +17,11 @@ import 'package:foodhub/components/social_button.dart';
 import 'package:foodhub/gen/assets.gen.dart';
 import 'package:foodhub/styles/custom_texts.dart';
 import 'package:foodhub/utils/input_validation.dart';
+import 'package:foodhub/views/verification/verification.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:foodhub/views/loading_screen/loading_screen.dart';
+import 'package:another_flushbar/flushbar.dart';
 
 //check responsiveness
 //more customizable parameters for field
@@ -26,8 +30,12 @@ import 'package:foodhub/views/loading_screen/loading_screen.dart';
 //multilanguage, used shared_preferences package for persisting package X
 //custom colors X
 //seperate validators X
-//fix validation message location - new class for error messages - showError property in reactiveFormField
-//add google's
+//fix validation message location - new class for error messages - showError property in reactiveFormField - used onChanged instead - back to showError X
+//setup user session
+//add google's X
+//recode UX on auth X
+//have lang detect device country on first startup X
+
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
@@ -39,6 +47,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final nameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AuthController>().clearErrorMessage();
+    });
+  }
 
   //input validations
   final form = FormGroup({
@@ -58,13 +74,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
         final name = nameController.text.trim();
         print(email);
 
-        // //go to loading screen
-        // Navigator.of(context)
-        //     .push(AnimatedRoutes.slideRight(const LoadingScreen()));
+        //go to loading screen
+        Navigator.of(context).push(AnimatedRoutes.slideRight(LoadingScreen(
+          loadingMessage: LocaleKeys.authLoadingMessageSignUp.tr(),
+          loadedMessage: LocaleKeys.signUpComplete.tr(),
+        )));
 
-        // //await firebase signup
-        // final result = await authProvider.signUp(email, password, name);
-        // print(result.user?.email);
+        //await firebase signup
+        final result = await authProvider.signUp(email, password, name);
+        print(result.user?.email);
 
         //clear message in case of return
         authProvider.clearErrorMessage();
@@ -119,13 +137,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
       // Sign Up Heading Title
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 26.0),
-        // child: Text(
-        //   'signUp',
-        //   style: CustomTextStyle.headlineLarge(context),
-        // ).tr(),
-        child: Text(LocaleKeys.signIn.tr()),
+        child: Text(
+          'signUp',
+          style: CustomTextStyle.headlineLarge(context),
+        ).tr(),
+        // child: Text(LocaleKeys.signIn.tr()),
       ),
-      const SizedBox(height: 20.0),
+      const SizedBox(height: 10),
+      errorMessage(context),
+      const SizedBox(height: 10.0),
       // Full name field
       BigField(
         hintText: 'nameGuide'.tr(),
@@ -134,6 +154,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         label: 'fullName'.tr(),
         formName: 'name',
         controller: nameController,
+        validationMessages: InputValidation.nameMap,
       ),
       const SizedBox(height: 18.0), // Spacing
       // Email Field
@@ -149,18 +170,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
         formName: 'password',
         controller: passwordController,
         label: 'pass'.tr(),
-      ),
-      // Sign-Up Button
+      ), // Sign-Up Button
       const SizedBox(height: 33.0), // Spacing
 
       Center(
         child: FormSubmitButton(
-          text: 'signUp'.tr().toUpperCase(),
-          onPressed: _handleSignUp,
-        ),
-      ),
-      Center(
-        child: PrimaryButton(
           text: 'signUp'.tr().toUpperCase(),
           onPressed: _handleSignUp,
         ),
@@ -179,20 +193,42 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       ),
 
-      const SizedBox(height: 50.0), // Spacing
+      const SizedBox(height: 20.0), // Spacing
       // Sign in with Text and Vertical Lines
-      HorizontalSeparator.dark(text: 'signUpWith'.tr()),
-      const SizedBox(height: 15.0), // Spacing
+      // HorizontalSeparator.dark(text: 'signUpWith'.tr()),
+      // const SizedBox(height: 15.0), // Spacing
 
-      const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 26.0),
+      // Padding(
+      //   padding: const EdgeInsets.symmetric(horizontal: 26.0),
+      //   child: Row(
+      //     children: [
+      //       SocialButton.facebook(
+      //         onPressed: () {},
+      //       ),
+      //       const SizedBox(
+      //         width: 40,
+      //       ),
+      //       SocialButton.google(
+      //         onPressed: () {},
+      //       ),
+      //     ],
+      //   ),
+      // ),
+      const SizedBox(height: 15),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 26.0),
         child: Row(
           children: [
-            SocialButton.facebook(),
-            SizedBox(
-              width: 40,
+            Expanded(
+              child: SecondaryButton(
+                text: 'Continue with phone number',
+                onPressed: () {
+                  Navigator.push(context,
+                      AnimatedRoutes.slideRight(const VerificationScreen()));
+                },
+                height: 60,
+              ),
             ),
-            SocialButton.google(),
           ],
         ),
       ),
@@ -202,18 +238,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
         children: <Widget>[
           TextButton(
             onPressed: () {
-              context.setLocale(const Locale('en'));
+              context.setLocale(const Locale('en', 'US'));
             },
             child: const Text('English'),
           ),
           TextButton(
             onPressed: () {
-              context.setLocale(const Locale('vi'));
+              context.setLocale(const Locale('vi', 'VN'));
             },
             child: const Text('twat'),
           )
         ],
       )
     ];
+  }
+
+  Center errorMessage(BuildContext context) {
+    return Center(
+      child: Text('${context.watch<AuthController>().errorMessage ?? ''}',
+          style: CustomTextStyle.errorText(context)),
+    );
   }
 }

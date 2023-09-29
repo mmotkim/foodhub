@@ -7,22 +7,29 @@ class SocialButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.iconPath,
+    this.onPressed,
   });
   final String text;
   final String iconPath;
+  final GestureTapCallback? onPressed;
 
-  const SocialButton.facebook()
-      : this(iconPath: 'assets/icons/fb.png', text: 'FACEBOOK');
-  const SocialButton.google()
-      : this(iconPath: 'assets/icons/gg.png', text: 'GOOGLE');
+  const SocialButton.facebook({onPressed})
+      : this(
+            iconPath: 'assets/icons/fb.png',
+            text: 'FACEBOOK',
+            onPressed: onPressed);
+  const SocialButton.google({onPressed})
+      : this(
+            iconPath: 'assets/icons/gg.png',
+            text: 'GOOGLE',
+            onPressed: onPressed);
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
-      onPressed: () {
-        // Implement Google login
-      },
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white,
           fixedSize: const Size(150, 54),
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.white,

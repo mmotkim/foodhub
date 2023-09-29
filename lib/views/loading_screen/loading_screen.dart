@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
+import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/views/verification/verification.dart';
-import 'package:foodhub/components/secondary_button.dart';
 import 'package:foodhub/styles/custom_texts.dart';
 import 'package:provider/provider.dart';
 
 class LoadingScreen extends StatefulWidget {
-  const LoadingScreen({super.key});
+  final String loadingMessage;
+  final String loadedMessage;
+  const LoadingScreen(
+      {super.key, required this.loadingMessage, required this.loadedMessage});
 
   @override
   State<LoadingScreen> createState() => _LoadingScreenState();
@@ -33,6 +36,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
             ),
             (Route<dynamic> route) => false,
           );
+        });
+      } else if (completed && authProvider.errorMessage != null) {
+        Future.delayed(const Duration(milliseconds: 1500), () {
+          Navigator.pop(context);
         });
       }
     });
@@ -65,7 +72,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                       const CircularProgressIndicator(color: Color(0xFFFE724C)),
                       const SizedBox(height: 20),
                       Text(
-                        'Setting up your account',
+                        widget.loadingMessage,
                         style: CustomTextStyle.labellarge(context)
                             .copyWith(color: const Color(0xFFFE724C)),
                       ),
@@ -86,11 +93,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
                           ),
                         ),
                         const SizedBox(height: 30),
-                        SecondaryButton(
-                            text: 'GO BACK',
-                            onPressed: () {
-                              Navigator.pop(context);
-                            })
                       ],
                     )
                   : Column(
@@ -99,7 +101,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 26),
                           child: Text(
-                            'Account creation complete!',
+                            // 'Account creation complete!',
+                            widget.loadedMessage,
                             textAlign: TextAlign.center,
                             style: CustomTextStyle.labellarge(context)
                                 .copyWith(color: Colors.green),

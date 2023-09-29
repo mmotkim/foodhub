@@ -1,5 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:foodhub/components/bottom_help_text.dart';
 import 'package:foodhub/gen/assets.gen.dart';
+import 'package:foodhub/gen/locale_keys.g.dart';
+import 'package:foodhub/styles/custom_colors.dart';
 import 'package:foodhub/styles/custom_texts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:reactive_pin_code_fields/reactive_pin_code_fields.dart';
@@ -11,15 +16,12 @@ class VerificationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    final form = FormGroup({
-      'pin': FormControl<int>(),
-    });
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Stack(
             children: [
@@ -36,24 +38,27 @@ class VerificationScreen extends StatelessWidget {
                       const SizedBox(height: 8.0),
                       // Sign Up Heading Title
                       Text(
-                        'Home Sweet Home',
+                        LocaleKeys.verificationCode.tr(),
                         style: CustomTextStyle.headlineLarge(context),
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'Please type the verification code sent to asdfasdfasdf ',
+                        '${LocaleKeys.authVerificationBody.tr()} ',
                         style: CustomTextStyle.bodySmall(context),
                       ),
                       const SizedBox(height: 31),
+                      const CodeForm(),
                       const SizedBox(height: 32),
-                      ReactiveForm(
-                        formGroup: form,
-                        child: ReactivePinCodeTextField<int>(
-                          length: 4,
-                          formControlName: 'pin',
+                      Center(
+                        child: BottomHelpText.light(
+                          text: '${LocaleKeys.authVerificationBottom.tr()} ',
+                          actionText:
+                              LocaleKeys.authVerificationBottomAction.tr(),
+                          onPressed: () {},
+                          fontSize: 16.0,
                         ),
                       ),
-                      const SizedBox(height: 400),
+                      const SizedBox(height: 398),
                     ],
                   ),
                 ),
@@ -61,6 +66,49 @@ class VerificationScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class CodeForm extends StatelessWidget {
+  const CodeForm({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final form = FormGroup({
+      'pin': FormControl<int>(),
+    });
+
+    return ReactiveForm(
+      formGroup: form,
+      child: ReactivePinCodeTextField<int>(
+        length: 4,
+        formControlName: 'pin',
+        keyboardType: TextInputType.number,
+        textStyle: CustomTextStyle.pinCode,
+        cursorWidth: 1.50,
+        cursorHeight: 22,
+        cursorColor: CustomColors.cursor,
+        enableActiveFill: true,
+        pinTheme: PinTheme(
+          activeFillColor: Colors.white,
+          inactiveFillColor: Colors.white,
+          selectedFillColor: Colors.white,
+          shape: PinCodeFieldShape.box,
+          borderRadius: BorderRadius.circular(12),
+          fieldHeight: 65,
+          fieldWidth: 65,
+          borderWidth: 1,
+          activeColor: CustomColors.fieldBorder,
+          selectedColor: CustomColors.primary,
+          inactiveColor: CustomColors.fieldBorder,
+        ),
+        boxShadows: [CustomColors.pinFieldShadow],
+        animationType: AnimationType.scale,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       ),
     );
   }
@@ -80,6 +128,43 @@ class TopDeco extends StatelessWidget {
           image: Assets.topDeco.provider(),
           fit: BoxFit.cover,
         ),
+      ),
+    );
+  }
+}
+
+class CodeInput extends StatelessWidget {
+  const CodeInput({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 65,
+      height: 65,
+      decoration: ShapeDecoration(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(width: 1, color: Color(0xFFEEEEEE)),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        shadows: const [
+          BoxShadow(
+            color: Color(0x3FE8E8E8),
+            blurRadius: 45,
+            offset: Offset(15, 20),
+            spreadRadius: 0,
+          )
+        ],
+      ),
+      child: ReactiveTextField(
+        keyboardType: TextInputType.number,
+        decoration: const InputDecoration(hintText: "0"),
+        style: CustomTextStyle.pinCode,
+        textAlign: TextAlign.center,
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(1),
+          FilteringTextInputFormatter.digitsOnly
+        ],
       ),
     );
   }

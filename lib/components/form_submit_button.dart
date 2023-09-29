@@ -6,9 +6,11 @@ class FormSubmitButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.onPressed,
+    this.textStyle,
   });
   final String text;
   final GestureTapCallback onPressed;
+  final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -30,29 +32,25 @@ class FormSubmitButton extends StatelessWidget {
         ],
       ),
       child: ElevatedButton(
-        // onPressed: form?.valid != null
-        //     ? (form!.valid ? widget.onPressed : null)
-        //     : null,
         onPressed: form.valid ? onPressed : null,
-
         style: ElevatedButton.styleFrom(
           disabledBackgroundColor: const Color(0xFFFE724C).withOpacity(0.3),
-
           backgroundColor:
               const Color(0xFFFE724C), // Make the ElevatedButton transparent
           shadowColor: Colors.transparent, // Remove shadow
         ),
         child: Text(
           text,
-          style: TextStyle(
-            color: form.valid
-                ? const Color(0xFFFEFEFE)
-                : const Color(0xFFFE724C).withOpacity(0.55),
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-            fontFamily: 'SofiaPro',
-            letterSpacing: 1.20,
-          ),
+          style: textStyle ??
+              TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'SofiaPro',
+                letterSpacing: 1.20,
+                color: form.valid
+                    ? const Color(0xFFFEFEFE)
+                    : const Color(0xFFFE724C).withOpacity(0.55),
+              ),
         ),
       ),
     );

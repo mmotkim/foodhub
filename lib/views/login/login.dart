@@ -3,6 +3,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
+import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/styles/animated_routes.dart';
 import 'package:foodhub/views/loading_screen/loading_screen.dart';
 import 'package:foodhub/views/signup/signup.dart';
@@ -18,6 +19,7 @@ import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../components/back_button.dart';
+import '../reset_password/reset_password.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -27,6 +29,15 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  //clear error message on first render
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AuthController>().clearErrorMessage();
+    });
+  }
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -46,8 +57,10 @@ class _LoginScreenState extends State<LoginScreen> {
         print(email);
 
         //go to loading screen
-        Navigator.of(context)
-            .push(AnimatedRoutes.slideRight(const LoadingScreen()));
+        Navigator.of(context).push(AnimatedRoutes.slideRight(LoadingScreen(
+          loadingMessage: LocaleKeys.authLoadingMessageLogin.tr(),
+          loadedMessage: LocaleKeys.signInComplete.tr(),
+        )));
 
         //await firebase signup
         final result = await authProvider.signIn(email, password);
@@ -103,7 +116,8 @@ class _LoginScreenState extends State<LoginScreen> {
           const NavPopButton(),
         ],
       ),
-      const SizedBox(height: 72.0),
+      const SizedBox(height: 42.0),
+
       // Sign Up Heading Title
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 26.0),
@@ -112,7 +126,9 @@ class _LoginScreenState extends State<LoginScreen> {
           style: CustomTextStyle.headlineLarge(context),
         ),
       ),
-      const SizedBox(height: 28.0),
+      const SizedBox(height: 14),
+      errorMessage(context),
+      const SizedBox(height: 14.0),
       BigField.email(
         formName: 'email',
         controller: emailController,
@@ -129,11 +145,15 @@ class _LoginScreenState extends State<LoginScreen> {
       const SizedBox(height: 28),
       Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             BottomHelpText.light(
                 text: '',
                 actionText: '${'forgotPassword'.tr()}?',
-                onPressed: () {}),
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(AnimatedRoutes.slideRight(ResetPasswordScreen()));
+                }),
             const SizedBox(height: 25),
             FormSubmitButton(
               text: 'login'.tr().toUpperCase(),
@@ -150,17 +170,31 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 50),
             HorizontalSeparator.dark(text: 'signInWith'.tr()),
             const SizedBox(height: 15),
-            const Row(
-              children: [
-                SocialButton.facebook(),
-                SizedBox(width: 40),
-                SocialButton.google()
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Row(
+                children: [
+                  SocialButton.facebook(
+                    onPressed: () {},
+                  ),
+                  const SizedBox(width: 40),
+                  SocialButton.google(
+                    onPressed: () {},
+                  )
+                ],
+              ),
             ),
             const SizedBox(height: 28),
           ],
         ),
       )
     ];
+  }
+
+  Center errorMessage(BuildContext context) {
+    return Center(
+      child: Text('${context.watch<AuthController>().errorMessage ?? ''}',
+          style: CustomTextStyle.errorText(context)),
+    );
   }
 }

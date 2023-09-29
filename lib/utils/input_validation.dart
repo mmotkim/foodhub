@@ -34,13 +34,23 @@ class InputValidation {
   static FormControl<String> email = FormControl<String>(
     validators: [
       Validators.required,
-      Validators.email,
     ],
+    value: '',
   );
 
   static FormControl<String> name = FormControl<String>(
     validators: [
       Validators.required,
+    ],
+  );
+
+  static FormControl<String> phone = FormControl<String>(
+    validators: [
+      Validators.required,
+      Validators.pattern(
+        r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$',
+        validationMessage: LocaleKeys.phoneWrongFormat,
+      ),
     ],
   );
 
@@ -55,21 +65,27 @@ class InputValidation {
         LocaleKeys.passwordOneSpecialCharacter.tr(),
     LocaleKeys.passwordOneUppercase: (error) =>
         LocaleKeys.passwordOneUppercase.tr(),
-    LocaleKeys.passwordTooLong: (error) => LocaleKeys.passwordTooLong.tr(),
-    LocaleKeys.passwordTooShort: (error) => LocaleKeys.passwordTooShort.tr(),
+    LocaleKeys.maxLength: (error) => LocaleKeys.maxLength.tr(),
+    LocaleKeys.minLength: (error) => LocaleKeys.minLength.tr(),
   };
 
   static Map<String, String Function(Object)> passwordSignInMap = {
     LocaleKeys.required: (error) => LocaleKeys.required.tr(),
-    LocaleKeys.passwordContainsSpace: (error) => LocaleKeys.required.tr(),
+    LocaleKeys.passwordContainsSpace: (error) =>
+        LocaleKeys.passwordContainsSpace.tr(),
   };
 
   static Map<String, String Function(Object)> emailMap = {
     LocaleKeys.required: (error) => LocaleKeys.required.tr(),
-    LocaleKeys.emailWrongFormat: (error) => LocaleKeys.emailWrongFormat.tr(),
+    LocaleKeys.email: (error) => LocaleKeys.emailWrongFormat.tr(),
   };
 
   static Map<String, String Function(Object)> nameMap = {
     LocaleKeys.required: (error) => LocaleKeys.required.tr(),
+  };
+
+  static Map<String, String Function(Object)> phoneMap = {
+    LocaleKeys.required: (error) => LocaleKeys.required.tr(),
+    LocaleKeys.phoneWrongFormat: (error) => LocaleKeys.phoneWrongFormat.tr(),
   };
 }

@@ -38,14 +38,16 @@ class BottomHelpText extends StatelessWidget {
   const BottomHelpText.light(
       {required String text,
       required String actionText,
-      required GestureTapCallback onPressed})
+      required GestureTapCallback onPressed,
+      fontSize})
       : this(
             text: text,
             actionText: actionText,
             color: const Color(0xFF5B5B5E),
             actionColor: CustomColors.primary,
             isUnderlined: TextDecoration.none,
-            onPressed: onPressed);
+            onPressed: onPressed,
+            fontSize: fontSize);
 
   @override
   Widget build(BuildContext context) {

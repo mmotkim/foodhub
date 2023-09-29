@@ -25,8 +25,27 @@ abstract class  LocaleKeys {
   static const passwordOneLowercase = 'passwordOneLowercase';
   static const passwordOneSpecialCharacter = 'passwordOneSpecialCharacter';
   static const emailWrongFormat = 'emailWrongFormat';
-  static const passwordTooShort = 'passwordTooShort';
-  static const passwordTooLong = 'passwordTooLong';
+  static const minLength = 'minLength';
+  static const maxLength = 'maxLength';
   static const passwordContainsSpace = 'passwordContainsSpace';
+  static const authLoadingMessageSignUp = 'authLoadingMessageSignUp';
+  static const authLoadingMessageLogin = 'authLoadingMessageLogin';
+  static const verificationCode = 'verificationCode';
+  static const authVerificationBody = 'authVerificationBody';
+  static const goBack = 'goBack';
+  static const errorWrongCredentials = 'errorWrongCredentials';
+  static const errorEmailInUse = 'errorEmailInUse';
+  static const signUpComplete = 'signUpComplete';
+  static const signInComplete = 'signInComplete';
+  static const authVerificationBottom = 'authVerificationBottom';
+  static const authVerificationBottomAction = 'authVerificationBottomAction';
+  static const authVerificationError = 'authVerificationError';
+  static const resetPassword = 'resetPassword';
+  static const resetPasswordBody = 'resetPasswordBody';
+  static const resetPasswordAction = 'resetPasswordAction';
+  static const resetPasswordComplete = 'resetPasswordComplete';
+  static const phoneRegistration = 'phoneRegistration';
+  static const phoneRegistrationBody = 'phoneRegistrationBody';
+  static const phoneWrongFormat = 'phoneWrongFormat';
 
 }

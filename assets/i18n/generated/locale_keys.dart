@@ -19,14 +19,14 @@ abstract class  LocaleKeys {
   static const forgotPassword = 'forgotPassword';
   static const passGuide = 'passGuide';
   static const nameGuide = 'nameGuide';
-  static const fieldRequired = 'fieldRequired';
+  static const required = 'required';
   static const passwordOneNumber = 'passwordOneNumber';
   static const passwordOneUppercase = 'passwordOneUppercase';
   static const passwordOneLowercase = 'passwordOneLowercase';
   static const passwordOneSpecialCharacter = 'passwordOneSpecialCharacter';
   static const emailWrongFormat = 'emailWrongFormat';
-  static const passwordTooShort = 'passwordTooShort';
-  static const passwordTooLong = 'passwordTooLong';
+  static const minLength = 'minLength';
+  static const maxLength = 'maxLength';
   static const passwordContainsSpace = 'passwordContainsSpace';
 
 }

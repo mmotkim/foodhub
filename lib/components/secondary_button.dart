@@ -5,9 +5,13 @@ class SecondaryButton extends StatefulWidget {
     super.key,
     required this.text,
     required this.onPressed,
+    this.width,
+    this.height,
   });
   final String text;
   final GestureTapCallback onPressed;
+  final double? width;
+  final double? height;
 
   @override
   State<SecondaryButton> createState() => _SecondaryButtonState();
@@ -17,8 +21,8 @@ class _SecondaryButtonState extends State<SecondaryButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 248,
-      height: 60,
+      width: widget.width,
+      height: widget.height,
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         color: Colors.transparent,
