@@ -48,6 +48,7 @@
     "phoneRegistration": "Phone Registration",
     "phoneRegistrationBody": "Enter your phone number to verify your account",
     "phoneWrongFormat": "Please enter a valid phone number.",
-    "continueWithPhone": "Continue with Phone Number"
+    "continueWithPhone": "Continue with Phone Number",
+    "errorWrongOTP": "Incorrect verification code"
   }
   

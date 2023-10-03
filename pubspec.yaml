@@ -53,6 +53,8 @@ dependencies:
   google_sign_in: ^6.1.5
   flutter_dotenv: ^5.1.0
   reactive_phone_form_field: ^2.0.1
+  flutter_easyloading: ^3.0.5
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:

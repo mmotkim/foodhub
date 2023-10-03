@@ -1,14 +1,17 @@
 // ignore_for_file: unused_element, avoid_print
 
+import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:foodhub/auth/controllers/auth_controller.dart';
+import 'package:foodhub/auth/controllers/email_verification_controller.dart';
 import 'package:foodhub/components/big_field.dart';
-import 'package:foodhub/components/bottom_help_text.dart';
 import 'package:foodhub/components/form_submit_button.dart';
 import 'package:foodhub/gen/assets.gen.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/styles/custom_texts.dart';
 import 'package:foodhub/utils/input_validation.dart';
+import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
@@ -21,6 +24,14 @@ class ResetPasswordScreen extends StatelessWidget {
     final form = FormGroup({
       'email': InputValidation.email,
     });
+
+    _handleOnPressed(BuildContext context) {
+      String email = form.control('email').value.trim();
+
+      if (form.valid) {
+        EmailVerificationController().requestResetPassword(context, email);
+      }
+    }
 
     return GestureDetector(
       onTap: () {
@@ -48,7 +59,7 @@ class ResetPasswordScreen extends StatelessWidget {
                         style: CustomTextStyle.headlineLarge(context),
                       ),
                       const SizedBox(height: 12),
-                      Container(
+                      SizedBox(
                         width: 236,
                         child: Text(
                           '${LocaleKeys.resetPasswordBody.tr()} ',
@@ -69,7 +80,7 @@ class ResetPasswordScreen extends StatelessWidget {
                               text: LocaleKeys.resetPasswordAction
                                   .tr()
                                   .toUpperCase(),
-                              onPressed: () {},
+                              onPressed: () => _handleOnPressed(context),
                               textStyle: CustomTextStyle.altLabel,
                             )
                           ],

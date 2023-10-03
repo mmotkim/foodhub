@@ -63,8 +63,8 @@ class CustomTextStyle {
 
   static TextStyle fieldText = const TextStyle(
     color: Color(0xFF111719),
-    fontSize: 17,
-    fontWeight: FontWeight.w500,
+    fontSize: 18,
+    fontWeight: FontWeight.w400,
     fontFamily: 'SofiaPro',
   );
 

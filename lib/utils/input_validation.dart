@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:reactive_phone_form_field/reactive_phone_form_field.dart';
 
 class InputValidation {
   static FormControl<String> password = FormControl<String>(
@@ -44,13 +45,13 @@ class InputValidation {
     ],
   );
 
-  static FormControl<String> phone = FormControl<String>(
+  static FormControl<PhoneNumber> phone = FormControl<PhoneNumber>(
     validators: [
       Validators.required,
-      Validators.pattern(
-        r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$',
-        validationMessage: LocaleKeys.phoneWrongFormat,
-      ),
+      // Validators.pattern(
+      //   r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$',
+      //   validationMessage: LocaleKeys.phoneWrongFormat,
+      // ),
     ],
   );
 

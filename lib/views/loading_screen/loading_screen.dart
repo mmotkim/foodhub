@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
-import 'package:foodhub/gen/locale_keys.g.dart';
-import 'package:foodhub/views/verification/verification.dart';
+import 'package:foodhub/views/home_screen/home_screen.dart';
 import 'package:foodhub/styles/custom_texts.dart';
 import 'package:provider/provider.dart';
 
@@ -22,17 +21,18 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void initState() {
     super.initState();
     // Simulate a 2-second delay to show the loading indicator
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 4), () {
       setState(() {
         completed = true;
       });
       final authProvider = Provider.of<AuthController>(context, listen: false);
-
+      print('HI');
+      print(authProvider.errorMessage);
       if (completed && authProvider.errorMessage == null) {
         Future.delayed(const Duration(seconds: 1), () {
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-              builder: (context) => const VerificationScreen(),
+              builder: (context) => const HomeScreen(),
             ),
             (Route<dynamic> route) => false,
           );

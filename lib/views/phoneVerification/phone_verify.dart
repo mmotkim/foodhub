@@ -1,11 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/components/bottom_help_text.dart';
 import 'package:foodhub/gen/assets.gen.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
+import 'package:foodhub/styles/animated_routes.dart';
 import 'package:foodhub/styles/custom_colors.dart';
 import 'package:foodhub/styles/custom_texts.dart';
+import 'package:foodhub/views/loading_screen/loading_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:reactive_pin_code_fields/reactive_pin_code_fields.dart';
 
@@ -33,33 +37,7 @@ class VerificationScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      //top decoration
-                      const SizedBox(height: 8.0),
-                      // Sign Up Heading Title
-                      Text(
-                        LocaleKeys.verificationCode.tr(),
-                        style: CustomTextStyle.headlineLarge(context),
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        '${LocaleKeys.authVerificationBody.tr()} ',
-                        style: CustomTextStyle.bodySmall(context),
-                      ),
-                      const SizedBox(height: 31),
-                      const CodeForm(),
-                      const SizedBox(height: 32),
-                      Center(
-                        child: BottomHelpText.light(
-                          text: '${LocaleKeys.authVerificationBottom.tr()} ',
-                          actionText:
-                              LocaleKeys.authVerificationBottomAction.tr(),
-                          onPressed: () {},
-                          fontSize: 16.0,
-                        ),
-                      ),
-                      const SizedBox(height: 398),
-                    ],
+                    children: _verificationContent(context),
                   ),
                 ),
               ),
@@ -69,13 +47,61 @@ class VerificationScreen extends StatelessWidget {
       ),
     );
   }
+
+  _verificationContent(BuildContext context) {
+    return <Widget>[
+      //heading
+      Text(
+        LocaleKeys.verificationCode.tr(),
+        style: CustomTextStyle.headlineLarge(context),
+      ),
+      const SizedBox(height: 12),
+      //body
+      Text(
+        '${LocaleKeys.authVerificationBody.tr()} ',
+        style: CustomTextStyle.bodySmall(context),
+      ),
+      const SizedBox(height: 16),
+      errorMessage(context),
+      const SizedBox(height: 15),
+      const CodeForm(),
+      const SizedBox(height: 32),
+      bottomHelpText(),
+      const SizedBox(height: 300),
+    ];
+  }
+
+  Center bottomHelpText() {
+    return Center(
+      child: BottomHelpText.light(
+        text: '${LocaleKeys.authVerificationBottom.tr()} ',
+        actionText: LocaleKeys.authVerificationBottomAction.tr(),
+        onPressed: () {},
+        fontSize: 16.0,
+      ),
+    );
+  }
+
+  Center errorMessage(BuildContext context) {
+    return Center(
+      child: Text(
+        context.watch<AuthController>().errorMessage ?? '',
+        style: CustomTextStyle.errorText(context),
+      ),
+    );
+  }
 }
 
-class CodeForm extends StatelessWidget {
+class CodeForm extends StatefulWidget {
   const CodeForm({
     super.key,
   });
 
+  @override
+  State<CodeForm> createState() => _CodeFormState();
+}
+
+class _CodeFormState extends State<CodeForm> {
   @override
   Widget build(BuildContext context) {
     final form = FormGroup({
@@ -85,7 +111,7 @@ class CodeForm extends StatelessWidget {
     return ReactiveForm(
       formGroup: form,
       child: ReactivePinCodeTextField<int>(
-        length: 4,
+        length: 6,
         formControlName: 'pin',
         keyboardType: TextInputType.number,
         textStyle: CustomTextStyle.pinCode,
@@ -99,8 +125,8 @@ class CodeForm extends StatelessWidget {
           selectedFillColor: Colors.white,
           shape: PinCodeFieldShape.box,
           borderRadius: BorderRadius.circular(12),
-          fieldHeight: 65,
-          fieldWidth: 65,
+          fieldHeight: 50,
+          fieldWidth: 50,
           borderWidth: 1,
           activeColor: CustomColors.fieldBorder,
           selectedColor: CustomColors.primary,
@@ -109,8 +135,25 @@ class CodeForm extends StatelessWidget {
         boxShadows: [CustomColors.pinFieldShadow],
         animationType: AnimationType.scale,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        onCompleted: (code) => _handleSubmit(code),
+        onSubmitted: (code) => _handleSubmit(code),
       ),
     );
+  }
+
+  _handleSubmit(String code) async {
+    final authProvider = Provider.of<AuthController>(context, listen: false);
+
+    try {
+      Navigator.of(context).push(AnimatedRoutes.slideRight(LoadingScreen(
+        loadingMessage: LocaleKeys.authLoadingMessageSignUp.tr(),
+        loadedMessage: LocaleKeys.signUpComplete.tr(),
+      )));
+
+      await authProvider.verifyOTP(code);
+    } catch (err) {
+      rethrow;
+    } finally {}
   }
 }
 

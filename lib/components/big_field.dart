@@ -88,9 +88,9 @@ class _BigFieldState extends State<BigField> {
   _handleErrors(FormControl<Object?> control) {
     //clear provider error message
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<AuthController>().clearErrorMessage();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   context.read<AuthController>().clearErrorMessage();
+    // });
 
     var firstError = control.errors.keys.firstWhereOrNull((element) => true);
     var _errorMessage = '';

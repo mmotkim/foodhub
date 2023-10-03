@@ -2,13 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/auth/controllers/error_controller.dart';
+import 'package:foodhub/utils/system_controller.dart';
 import 'package:foodhub/views/loading_screen/loading_screen.dart';
 import 'package:foodhub/views/main_menu.dart';
 import 'package:foodhub/views/splash.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:foodhub/views/verification/verification.dart';
+import 'package:foodhub/views/phoneVerification/phone_verify.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
@@ -38,6 +40,7 @@ Future<void> main() async {
         providers: [
           ChangeNotifierProvider(create: (context) => AuthController()),
           ChangeNotifierProvider(create: (context) => ErrorController()),
+          ChangeNotifierProvider(create: (context) => SystemController()),
         ],
         child: const MyApp(),
       ),
@@ -53,13 +56,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // This widget is the root of your application.
-
   @override
   Widget build(BuildContext context) {
-    print(context.deviceLocale.toString());
-    print(context.supportedLocales);
-    print(context.fallbackLocale);
     return MaterialApp(
       title: 'Flutter FoodHub',
       theme: ThemeData(
@@ -75,6 +73,7 @@ class _MyAppState extends State<MyApp> {
       supportedLocales: context.supportedLocales,
       locale: context.locale,
       routes: {'main_menu': (context) => const MainMemu()},
+      builder: EasyLoading.init(),
       home: const SplashScreen(),
     );
   }

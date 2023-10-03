@@ -1,13 +1,17 @@
 // ignore_for_file: avoid_print, unused_import
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/auth/controllers/error_controller.dart';
 import 'package:foodhub/components/primary_button.dart';
 import 'package:foodhub/components/secondary_button.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/styles/animated_routes.dart';
+import 'package:foodhub/utils/system_controller.dart';
+import 'package:foodhub/views/home_screen/home_screen.dart';
 import 'package:foodhub/views/login/login.dart';
 import 'package:foodhub/components/big_field.dart';
 import 'package:foodhub/components/bottom_help_text.dart';
@@ -17,7 +21,8 @@ import 'package:foodhub/components/social_button.dart';
 import 'package:foodhub/gen/assets.gen.dart';
 import 'package:foodhub/styles/custom_texts.dart';
 import 'package:foodhub/utils/input_validation.dart';
-import 'package:foodhub/views/verification/verification.dart';
+import 'package:foodhub/views/phone_screen/phone.dart';
+import 'package:foodhub/views/phoneVerification/phone_verify.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:foodhub/views/loading_screen/loading_screen.dart';
@@ -35,6 +40,12 @@ import 'package:another_flushbar/flushbar.dart';
 //add google's X
 //recode UX on auth X
 //have lang detect device country on first startup X
+//add phone authentication X
+//fix UX on auth X
+//dedicated router
+//reset password
+//code should expire
+//4 chars code
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -65,6 +76,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void _handleSignUp() async {
     final authProvider = Provider.of<AuthController>(context, listen: false);
+    final systemController =
+        Provider.of<SystemController>(context, listen: false);
 
     if (form.valid) {
       try {
@@ -75,19 +88,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
         print(email);
 
         //go to loading screen
-        Navigator.of(context).push(AnimatedRoutes.slideRight(LoadingScreen(
-          loadingMessage: LocaleKeys.authLoadingMessageSignUp.tr(),
-          loadedMessage: LocaleKeys.signUpComplete.tr(),
-        )));
+        // Navigator.of(context).push(AnimatedRoutes.slideRight(LoadingScreen(
+        //   loadingMessage: LocaleKeys.authLoadingMessageSignUp.tr(),
+        //   loadedMessage: LocaleKeys.signUpComplete.tr(),
+        // )));
 
         //await firebase signup
-        final result = await authProvider.signUp(email, password, name);
+        final result =
+            await authProvider.signUp(context, email, password, name);
         print(result.user?.email);
+        if (result.user != null && mounted) {
+          Navigator.pushAndRemoveUntil(context,
+              AnimatedRoutes.slideRight(const HomeScreen()), (route) => false);
+        }
 
         //clear message in case of return
         authProvider.clearErrorMessage();
-      } catch (err) {
-        print('Error during sign-up: $err');
+      } on FirebaseAuthException catch (err) {
+        systemController.handleFirebaseEx(err.code);
       } finally {}
     } else {
       print('form is shit');
@@ -223,8 +241,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: SecondaryButton(
                 text: 'Continue with phone number',
                 onPressed: () {
-                  Navigator.push(context,
-                      AnimatedRoutes.slideRight(const VerificationScreen()));
+                  Navigator.push(
+                      context, AnimatedRoutes.slideRight(const PhoneScreen()));
                 },
                 height: 60,
               ),
@@ -255,7 +273,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Center errorMessage(BuildContext context) {
     return Center(
-      child: Text('${context.watch<AuthController>().errorMessage ?? ''}',
+      child: Text(context.watch<AuthController>().errorMessage ?? '',
           style: CustomTextStyle.errorText(context)),
     );
   }

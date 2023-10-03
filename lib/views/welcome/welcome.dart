@@ -3,9 +3,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
-import 'package:foodhub/gen/locale_keys.g.dart';
-import 'package:foodhub/styles/animated_routes.dart';
-import 'package:foodhub/views/loading_screen/loading_screen.dart';
 import 'package:foodhub/views/login/login.dart';
 import 'package:foodhub/views/signup/signup.dart';
 import 'package:foodhub/components/horizontal_separator.dart';

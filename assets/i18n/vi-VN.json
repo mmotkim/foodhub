@@ -48,6 +48,7 @@
     "phoneRegistration": "Đăng ký số điện thoại",
     "phoneRegistrationBody": "Nhập số điện thoại của bạn để xác minh tài khoản",
     "phoneWrongFormat": "Vui lòng nhập số điện thoại hợp lệ.",
-    "continueWithPhone": "Tiếp tục với Số điện thoại"
+    "continueWithPhone": "Tiếp tục với Số điện thoại",
+    "errorWrongOTP": "Sai mã xác thực"
   }
   
