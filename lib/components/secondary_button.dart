@@ -22,7 +22,7 @@ class _SecondaryButtonState extends State<SecondaryButton> {
   Widget build(BuildContext context) {
     return Container(
       width: widget.width,
-      height: widget.height,
+      height: widget.height ?? 60,
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         color: Colors.transparent,

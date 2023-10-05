@@ -37,15 +37,20 @@ import 'package:another_flushbar/flushbar.dart';
 //seperate validators X
 //fix validation message location - new class for error messages - showError property in reactiveFormField - used onChanged instead - back to showError X
 //setup user session
+
 //add google's X
 //recode UX on auth X
 //have lang detect device country on first startup X
 //add phone authentication X
 //fix UX on auth X
 //dedicated router
-//reset password
+//reset password X
 //code should expire
-//4 chars code
+//4 chars code X
+
+//recheck command for localization
+//optional: get context locale without context
+//fix google flow
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -65,6 +70,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<AuthController>().clearErrorMessage();
     });
+  }
+
+  @override
+  void dispose() {
+    form.controls.forEach((key, value) {
+      value.updateValue('');
+      value.markAsUntouched();
+    });
+    super.dispose();
   }
 
   //input validations
@@ -106,7 +120,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
         authProvider.clearErrorMessage();
       } on FirebaseAuthException catch (err) {
         systemController.handleFirebaseEx(err.code);
-      } finally {}
+      } finally {
+        form.controls.forEach((key, value) {
+          value.updateValue('');
+          value.markAsUntouched();
+        });
+        // emailController.clear();
+        // passwordController.clear();
+        // nameController.clear();
+      }
     } else {
       print('form is shit');
 

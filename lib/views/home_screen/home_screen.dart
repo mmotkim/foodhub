@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/styles/animated_routes.dart';
 import 'package:foodhub/styles/custom_texts.dart';
+import 'package:foodhub/views/reset_password/reset_password.dart';
 import 'package:foodhub/views/welcome/welcome.dart';
 import 'package:provider/provider.dart';
 
@@ -43,15 +44,31 @@ class HomeScreen extends StatelessWidget {
     AuthController authController =
         Provider.of<AuthController>(context, listen: false);
     return <Widget>[
+      const SizedBox(height: 400),
       const UserInfo(),
+      const SizedBox(height: 30),
+      TextButton(
+        onPressed: () {
+          authController.signOut();
+          Navigator.push(
+              context,
+              AnimatedRoutes.slideRight(const ResetPasswordScreen(
+                isLoggedIn: true,
+              )));
+        },
+        child:
+            Text('Change password', style: CustomTextStyle.labellarge(context)),
+      ),
       TextButton(
         onPressed: () {
           authController.signOut();
           Navigator.push(
               context, AnimatedRoutes.slideRight(const WelcomeScreen()));
         },
-        child: const Text('Sign the fuck out'),
+        child: Text('Sign the fuck out',
+            style: CustomTextStyle.labellarge(context)),
       ),
+      const SizedBox(height: 30),
     ];
   }
 }

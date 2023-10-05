@@ -35,12 +35,12 @@ class CustomTextStyle {
         );
   }
 
-  static TextStyle headlineLarge(BuildContext context) {
+  static TextStyle headlineLarge(BuildContext context, {Color? color}) {
     return Theme.of(context).textTheme.headlineLarge!.copyWith(
-          fontSize: 36.41,
-          fontWeight: FontWeight.w600,
-          height: 1.2,
-        );
+        fontSize: 36.41,
+        fontWeight: FontWeight.w600,
+        height: 1.2,
+        color: color);
   }
 
   static TextStyle errorText(BuildContext context) {

@@ -41,10 +41,8 @@
     "resetPassword": "Reset password",
     "resetPasswordBody": "Please enter your email address to request a password reset",
     "resetPasswordAction": "Send new password",
-    "resetPasswordComplete": {
-      "other" : 
-    "If there's an account registered under {}%, a password reset email will be sent there."
-    },
+    "resetPasswordComplete": "If there's an account registered under {}, a password reset email will be sent there.",
+    "resetPasswordCompleteAction": "Back to login",
     "phoneRegistration": "Phone Registration",
     "phoneRegistrationBody": "Enter your phone number to verify your account",
     "phoneWrongFormat": "Please enter a valid phone number.",

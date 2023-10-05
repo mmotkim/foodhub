@@ -5,9 +5,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/auth/controllers/error_controller.dart';
+import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/utils/system_controller.dart';
 import 'package:foodhub/views/loading_screen/loading_screen.dart';
+import 'package:foodhub/views/login/login.dart';
 import 'package:foodhub/views/main_menu.dart';
+import 'package:foodhub/views/signup/signup.dart';
 import 'package:foodhub/views/splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:foodhub/views/phoneVerification/phone_verify.dart';
@@ -26,11 +29,6 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // runApp(const MyApp());
-  // runApp(ChangeNotifierProvider(
-  //   create: (context) => AuthController(),
-  //   builder: ((context, child) => const MyApp()),
-  // ));
   runApp(
     EasyLocalization(
       supportedLocales: const [Locale('en', 'US'), Locale('vi', 'VN')],
@@ -57,6 +55,12 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
+  void initState() {
+    print('alreadyAccount'.tr());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter FoodHub',
@@ -72,7 +76,11 @@ class _MyAppState extends State<MyApp> {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      routes: {'main_menu': (context) => const MainMemu()},
+      routes: {
+        'main_menu': (context) => const MainMemu(),
+        '/login': (context) => const LoginScreen(),
+        '/signup': (context) => const SignUpScreen()
+      },
       builder: EasyLoading.init(),
       home: const SplashScreen(),
     );

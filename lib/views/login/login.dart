@@ -43,6 +43,15 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
+  @override
+  void dispose() {
+    form.controls.forEach((key, value) {
+      value.updateValue('');
+      value.markAsUntouched();
+    });
+    super.dispose();
+  }
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -75,6 +84,10 @@ class _LoginScreenState extends State<LoginScreen> {
       } on FirebaseAuthException catch (e) {
         systemController.handleFirebaseEx(e.code);
       } finally {
+        form.controls.forEach((key, value) {
+          value.updateValue('');
+          value.markAsUntouched();
+        });
         Future.delayed(
             const Duration(milliseconds: 1500), () => EasyLoading.dismiss());
       }
@@ -158,8 +171,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 text: '',
                 actionText: '${LocaleKeys.forgotPassword.tr()}?',
                 onPressed: () {
-                  Navigator.of(context).push(
-                      AnimatedRoutes.slideRight(const ResetPasswordScreen()));
+                  Navigator.of(context)
+                      .push(AnimatedRoutes.slideRight(const ResetPasswordScreen(
+                    isLoggedIn: false,
+                  )));
                 }),
             const SizedBox(height: 25),
             FormSubmitButton(

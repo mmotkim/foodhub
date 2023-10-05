@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:foodhub/database/entity/VerificationCode.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/styles/animated_routes.dart';
 import 'package:foodhub/utils/system_controller.dart';
@@ -26,6 +27,11 @@ class AuthController extends ChangeNotifier {
   void clearErrorMessage() {
     print("clearedErrorMessage");
     errorMessage = null; // Clear the error message
+    notifyListeners();
+  }
+
+  void setCode(String codeString) {
+    code = codeString;
     notifyListeners();
   }
 
@@ -96,6 +102,7 @@ class AuthController extends ChangeNotifier {
   // Sign out
   Future<void> signOut() async {
     await _auth.signOut();
+    await GoogleSignIn().disconnect();
     notifyListeners();
   }
 
@@ -105,10 +112,6 @@ class AuthController extends ChangeNotifier {
   }
 
   Future<UserCredential> signInWithGoogle(BuildContext context) async {
-    Navigator.of(context).push(AnimatedRoutes.slideRight(LoadingScreen(
-      loadingMessage: LocaleKeys.authLoadingMessageSignUp.tr(),
-      loadedMessage: LocaleKeys.signInComplete.tr(),
-    )));
     try {
       // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -124,6 +127,10 @@ class AuthController extends ChangeNotifier {
       );
 
       // Once signed in, return the UserCredential
+      Navigator.of(context).push(AnimatedRoutes.slideRight(LoadingScreen(
+        loadingMessage: LocaleKeys.authLoadingMessageSignUp.tr(),
+        loadedMessage: LocaleKeys.signInComplete.tr(),
+      )));
       return await FirebaseAuth.instance.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
       setErrorMessage(e.message!);
@@ -185,6 +192,8 @@ class AuthController extends ChangeNotifier {
       // return true;
     } catch (_) {
       rethrow;
+    } finally {
+      clearErrorMessage();
     }
   }
 
@@ -208,10 +217,15 @@ class AuthController extends ChangeNotifier {
     final systemController =
         Provider.of<SystemController>(context, listen: false);
 
+    //set locale
+    await FirebaseAuth.instance
+        .setLanguageCode(context.locale.languageCode.toString());
+
     try {
       systemController.showLoading();
 
       await _auth.sendPasswordResetEmail(email: email);
+
       systemController.showInfo('Done');
     } on FirebaseAuthException catch (e) {
       systemController.handleFirebaseEx(e.code);
@@ -220,10 +234,14 @@ class AuthController extends ChangeNotifier {
     }
   }
 
-  String generateRandomCode(int len) {
+  VerificationCode generateVerificationCode(int len) {
     var r = Random();
     const chars = '0123456789';
-    return code =
+    final now = DateTime.now();
+    String code =
         List.generate(len, (index) => chars[r.nextInt(chars.length)]).join();
+    setCode(code);
+
+    return VerificationCode(code: code, created: now);
   }
 }

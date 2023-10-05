@@ -9,13 +9,18 @@ import 'package:foodhub/components/big_field.dart';
 import 'package:foodhub/components/form_submit_button.dart';
 import 'package:foodhub/gen/assets.gen.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
+import 'package:foodhub/styles/animated_routes.dart';
 import 'package:foodhub/styles/custom_texts.dart';
 import 'package:foodhub/utils/input_validation.dart';
+import 'package:foodhub/views/reset_password/email_sent.dart';
+import 'package:foodhub/views/reset_password/email_sent2.dart';
+import 'package:foodhub/views/signup/signup.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
-  const ResetPasswordScreen({super.key});
+  const ResetPasswordScreen({super.key, required this.isLoggedIn});
+  final bool isLoggedIn;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +30,30 @@ class ResetPasswordScreen extends StatelessWidget {
       'email': InputValidation.email,
     });
 
-    _handleOnPressed(BuildContext context) {
+    onPressed(BuildContext context) async {
+      String emailValue = form.control('email').value.trim();
+
+      // if (form.valid) {
+      //   EmailVerificationController().requestResetPassword(context, email);
+      // }
+
+      final authProvider = Provider.of<AuthController>(context, listen: false);
+      await authProvider.sendPasswordResetEmail(context, emailValue).then(
+          (value) => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      EmailSentScreen2(emailSent: emailValue))));
+      // Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (context) => EmailSentScreen2(emailSent: email)));
+
+      //dispose value
+      email.clear();
+    }
+
+    onPressedLoggedIn(BuildContext context) async {
       String email = form.control('email').value.trim();
 
       if (form.valid) {
@@ -80,7 +108,9 @@ class ResetPasswordScreen extends StatelessWidget {
                               text: LocaleKeys.resetPasswordAction
                                   .tr()
                                   .toUpperCase(),
-                              onPressed: () => _handleOnPressed(context),
+                              onPressed: () => isLoggedIn
+                                  ? onPressedLoggedIn(context)
+                                  : onPressed(context),
                               textStyle: CustomTextStyle.altLabel,
                             )
                           ],

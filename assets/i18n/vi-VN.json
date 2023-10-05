@@ -41,10 +41,8 @@
     "resetPassword": "Đặt lại mật khẩu",
     "resetPasswordBody": "Vui lòng nhập địa chỉ email của bạn để yêu cầu đặt lại mật khẩu",
     "resetPasswordAction": "Gửi mật khẩu mới",
-    "resetPasswordComplete": {
-      "other" : 
-        "Nếu có tài khoản đã đăng ký dưới địa chỉ email {}%, một email đặt lại mật khẩu sẽ được gửi đến đó."
-    },
+    "resetPasswordComplete": "Nếu có tài khoản đã đăng ký dưới địa chỉ email {}, một email đặt lại mật khẩu sẽ được gửi đến đó.",
+    "resetPasswordCompleteAction": "Quay về đăng nhập",
     "phoneRegistration": "Đăng ký số điện thoại",
     "phoneRegistrationBody": "Nhập số điện thoại của bạn để xác minh tài khoản",
     "phoneWrongFormat": "Vui lòng nhập số điện thoại hợp lệ.",

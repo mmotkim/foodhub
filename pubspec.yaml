@@ -55,6 +55,7 @@ dependencies:
   reactive_phone_form_field: ^2.0.1
   flutter_easyloading: ^3.0.5
   http: ^1.1.0
+  firebase_database: ^10.2.7
 
 dev_dependencies:
   flutter_test:

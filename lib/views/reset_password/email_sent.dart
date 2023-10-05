@@ -113,7 +113,7 @@ class _CodeFormState extends State<CodeForm> {
     return ReactiveForm(
       formGroup: form,
       child: ReactivePinCodeTextField<int>(
-        length: 6,
+        length: 4,
         formControlName: 'pin',
         keyboardType: TextInputType.number,
         textStyle: CustomTextStyle.pinCode,
@@ -128,7 +128,7 @@ class _CodeFormState extends State<CodeForm> {
           shape: PinCodeFieldShape.box,
           borderRadius: BorderRadius.circular(12),
           fieldHeight: 65,
-          fieldWidth: 50,
+          fieldWidth: 65,
           borderWidth: 1,
           activeColor: CustomColors.fieldBorder,
           selectedColor: CustomColors.primary,
