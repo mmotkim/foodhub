@@ -1,5 +1,7 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
+import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/views/home_screen/home_screen.dart';
 import 'package:foodhub/styles/custom_texts.dart';
 import 'package:provider/provider.dart';
@@ -30,12 +32,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
       print(authProvider.errorMessage);
       if (completed && authProvider.errorMessage == null) {
         Future.delayed(const Duration(seconds: 1), () {
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => const HomeScreen(),
-            ),
-            (Route<dynamic> route) => false,
-          );
+          // Navigator.of(context).pushAndRemoveUntil(
+          //   MaterialPageRoute(
+          //     builder: (context) => const HomeScreen(),
+          //   ),
+          //   (Route<dynamic> route) => false,
+          // );
+          context.router.replaceAll([const HomeRoute()]);
         });
       } else if (completed && authProvider.errorMessage != null) {
         Future.delayed(const Duration(milliseconds: 1500), () {

@@ -1,16 +1,39 @@
 # foodhub
 
-A new Flutter project.
+My demo flutter project using Firebase based from a Figma UI design FoodHub.
+Created from VSCode's flutter new Application project template 
 
-## Getting Started
+# Dev
 
-This project is a starting point for a Flutter application.
+You can contact me directly for help setting up development environment.
 
-A few resources to get you started if this is your first Flutter project:
+Steps:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Install Flutter SDK
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Make sure you have installed Android Studio and an appropriate Android SDK version, Android SDK Command-line Tools, and Android SDK Build-Tools
+(Required by Flutter)
+Run ```flutter doctor``` to confirm above installations.
+
+Launch Android Studio, click the Device Manager icon, and select Create Device under Virtual tab…
+In older versions of Android Studio, you should instead launch Android Studio > Tools > Android > AVD Manager and select Create Virtual Device…. (The Android submenu is only present when inside an Android project.)
+If you do not have a project open, you can choose 3-Dot Menu / More Actions > Virtual Device Manager and select Create Device…
+
+Then
+``` 
+flutter doctor --android-licenses 
+```
+
+Finally, on your preferred IDE, run
+
+```flutter pub get```
+```flutter run```
+
+# Generate Localization keys command
+
+Everytime you add new localizable text keys while the project is built, run this command. This command also auto runs on build
+
+```
+dart run easy_localization:generate -S "assets/i18n/" -O "lib/gen" -o "locale_keys.g.dart" -f keys
+```
+

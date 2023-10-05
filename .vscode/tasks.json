@@ -1,0 +1,14 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "generateLocalizations",
+        "type": "shell",
+        "command": "dart run easy_localization:generate -S assets/i18n -O lib/gen -o locale_keys.g.dart -f keys",
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        }
+      }
+    ]
+}

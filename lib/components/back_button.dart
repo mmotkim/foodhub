@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 class NavPopButton extends StatelessWidget {
@@ -11,7 +12,7 @@ class NavPopButton extends StatelessWidget {
       padding: const EdgeInsets.only(left: 27.0, top: 37),
       child: InkWell(
         onTap: () {
-          Navigator.pop(context);
+          context.router.pop();
         },
         enableFeedback: false,
         child: Container(

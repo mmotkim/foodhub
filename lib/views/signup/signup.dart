@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print, unused_import
 
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:foodhub/auth/controllers/error_controller.dart';
 import 'package:foodhub/components/primary_button.dart';
 import 'package:foodhub/components/secondary_button.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
+import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/styles/animated_routes.dart';
 import 'package:foodhub/utils/system_controller.dart';
 import 'package:foodhub/views/home_screen/home_screen.dart';
@@ -43,15 +45,17 @@ import 'package:another_flushbar/flushbar.dart';
 //have lang detect device country on first startup X
 //add phone authentication X
 //fix UX on auth X
-//dedicated router
 //reset password X
 //code should expire
 //4 chars code X
 
-//recheck command for localization
+//dedicated router X
+//recheck command for localization X
 //optional: get context locale without context
-//fix google flow
+//fix google flow X
+//auto redirect on email_sent screen X
 
+@RoutePage()
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
@@ -112,8 +116,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
             await authProvider.signUp(context, email, password, name);
         print(result.user?.email);
         if (result.user != null && mounted) {
-          Navigator.pushAndRemoveUntil(context,
-              AnimatedRoutes.slideRight(const HomeScreen()), (route) => false);
+          // Navigator.pushAndRemoveUntil(context,
+          //     AnimatedRoutes.slideRight(const HomeScreen()), (route) => false);
+          // context.router
+          //     .pushAndPopUntil(const HomeRoute(), predicate: (route) => false);
+          context.router.replaceAll([
+            const HomeRoute(),
+          ]);
         }
 
         //clear message in case of return
@@ -227,8 +236,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
           text: '${'alreadyAccount'.tr()}?  ',
           actionText: 'login'.tr(),
           onPressed: () {
-            Navigator.of(context)
-                .push(AnimatedRoutes.slideRight(const LoginScreen()));
+            // Navigator.of(context)
+            //     .push(AnimatedRoutes.slideRight(const LoginScreen()));
+            context.router.navigate(const LoginRoute());
           },
         ),
       ),
@@ -263,8 +273,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: SecondaryButton(
                 text: 'Continue with phone number',
                 onPressed: () {
-                  Navigator.push(
-                      context, AnimatedRoutes.slideRight(const PhoneScreen()));
+                  // Navigator.push(
+                  //     context, AnimatedRoutes.slideRight(const PhoneScreen()));
+                  context.router.push(const PhoneRoute());
                 },
                 height: 60,
               ),

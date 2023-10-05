@@ -1,12 +1,10 @@
 // ignore_for_file: , no_leading_underscores_for_local_identifiers, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
-import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/styles/custom_colors.dart';
 import 'package:foodhub/styles/custom_texts.dart';
 import 'package:foodhub/utils/input_validation.dart';
 import 'package:collection/collection.dart';
-import 'package:provider/provider.dart';
 
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -67,8 +65,8 @@ class _BigFieldState extends State<BigField> {
 
   @override
   void initState() {
-    super.initState();
     _passwordVisible = !widget.obscureText;
+    super.initState();
   }
 
   clearError(FormControl<Object?> control) {

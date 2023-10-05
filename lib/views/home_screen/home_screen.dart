@@ -1,11 +1,14 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
+import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/styles/animated_routes.dart';
 import 'package:foodhub/styles/custom_texts.dart';
 import 'package:foodhub/views/reset_password/reset_password.dart';
 import 'package:foodhub/views/welcome/welcome.dart';
 import 'package:provider/provider.dart';
 
+@RoutePage()
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -50,11 +53,7 @@ class HomeScreen extends StatelessWidget {
       TextButton(
         onPressed: () {
           authController.signOut();
-          Navigator.push(
-              context,
-              AnimatedRoutes.slideRight(const ResetPasswordScreen(
-                isLoggedIn: true,
-              )));
+          context.router.push(ResetPasswordRoute(isLoggedIn: true));
         },
         child:
             Text('Change password', style: CustomTextStyle.labellarge(context)),
@@ -62,8 +61,7 @@ class HomeScreen extends StatelessWidget {
       TextButton(
         onPressed: () {
           authController.signOut();
-          Navigator.push(
-              context, AnimatedRoutes.slideRight(const WelcomeScreen()));
+          context.router.push(const WelcomeRoute());
         },
         child: Text('Sign the fuck out',
             style: CustomTextStyle.labellarge(context)),

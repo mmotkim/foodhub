@@ -1,12 +1,15 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:foodhub/components/bottom_help_text.dart';
 import 'package:foodhub/components/secondary_button.dart';
 import 'package:foodhub/gen/assets.gen.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
+import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/styles/custom_colors.dart';
 import 'package:foodhub/styles/custom_texts.dart';
 
+@RoutePage()
 class EmailSentScreen2 extends StatefulWidget {
   const EmailSentScreen2({super.key, required this.emailSent});
   final String emailSent;
@@ -19,8 +22,8 @@ class _EmailSentScreen2State extends State<EmailSentScreen2>
     with WidgetsBindingObserver {
   @override
   void initState() {
-    // TODO: implement initState for resumed state
     super.initState();
+    WidgetsBinding.instance?.addObserver(this);
   }
 
   @override
@@ -28,10 +31,18 @@ class _EmailSentScreen2State extends State<EmailSentScreen2>
     super.didChangeAppLifecycleState(state);
 
     if (state == AppLifecycleState.resumed) {
-      Navigator.of(context).popUntil((route) {
-        return route.isFirst || route.settings.name == '/login';
-      });
+      print('fuckss');
+      // Navigator.of(context).popUntil((route) {
+      //   return route.isFirst || route.settings.name == '/login';
+      // });
+      context.router.popUntilRouteWithName(LoginRoute.name);
     }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
   }
 
   @override
@@ -54,7 +65,7 @@ class _EmailSentScreen2State extends State<EmailSentScreen2>
             _bottomHelpText(),
             const SizedBox(height: 38),
             SecondaryButton(
-                text: LocaleKeys.resetPasswordCompleteAction,
+                text: LocaleKeys.resetPasswordCompleteAction.tr(),
                 onPressed: onPressed,
                 width: 248),
           ],
@@ -108,9 +119,10 @@ class _EmailSentScreen2State extends State<EmailSentScreen2>
   }
 
   void onPressed() {
-    Navigator.of(context).popUntil((route) {
-      return route.isFirst || route.settings.name == '/login';
-    });
+    // Navigator.of(context).popUntil((route) {
+    //   return route.isFirst || route.settings.name == '/login';
+    // });
+    context.router.popUntilRouteWithName(LoginRoute.name);
   }
 }
 

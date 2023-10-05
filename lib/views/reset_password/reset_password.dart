@@ -1,6 +1,6 @@
 // ignore_for_file: unused_element, avoid_print
 
-import 'package:collection/collection.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
@@ -9,15 +9,14 @@ import 'package:foodhub/components/big_field.dart';
 import 'package:foodhub/components/form_submit_button.dart';
 import 'package:foodhub/gen/assets.gen.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
-import 'package:foodhub/styles/animated_routes.dart';
+import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/styles/custom_texts.dart';
 import 'package:foodhub/utils/input_validation.dart';
-import 'package:foodhub/views/reset_password/email_sent.dart';
 import 'package:foodhub/views/reset_password/email_sent2.dart';
-import 'package:foodhub/views/signup/signup.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+@RoutePage()
 class ResetPasswordScreen extends StatelessWidget {
   const ResetPasswordScreen({super.key, required this.isLoggedIn});
   final bool isLoggedIn;
@@ -39,11 +38,8 @@ class ResetPasswordScreen extends StatelessWidget {
 
       final authProvider = Provider.of<AuthController>(context, listen: false);
       await authProvider.sendPasswordResetEmail(context, emailValue).then(
-          (value) => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      EmailSentScreen2(emailSent: emailValue))));
+          (value) =>
+              context.router.push(EmailSentRoute2(emailSent: emailValue)));
       // Navigator.push(
       //     context,
       //     MaterialPageRoute(

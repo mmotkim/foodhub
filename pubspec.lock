@@ -57,6 +57,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
+  auto_route:
+    dependency: "direct main"
+    description:
+      name: auto_route
+      sha256: "72f21e8b6cbbe25f02ea69183e024996530bf495cc1b077a49e0ec6726f0c271"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.8.3"
+  auto_route_generator:
+    dependency: "direct dev"
+    description:
+      name: auto_route_generator
+      sha256: e7aa9ab44b77cd31a4619d94db645ab5736e543fd0b4c6058c281249e479dfb8
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.3.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -470,22 +486,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.5"
+  flutter_gen:
+    dependency: "direct main"
+    description:
+      name: flutter_gen
+      sha256: "0815a61633ac5f0365dd07cb501982718dbac8905dd7a7c34e50a1f3516155bb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.3.2"
   flutter_gen_core:
     dependency: transitive
     description:
       name: flutter_gen_core
-      sha256: e8637dd6a59860f89e5e71be0a27101ec32dad1a0ed7fd879fd23b6e91d5004d
+      sha256: "8b4ff1d45d125e576e26ea99d15e0419bb3c45b53696e022880866b78bb6b830"
       url: "https://pub.dev"
     source: hosted
-    version: "5.3.1"
-  flutter_gen_runner:
-    dependency: "direct dev"
-    description:
-      name: flutter_gen_runner
-      sha256: "7de1bf4fc0439be0fef3178b6423d5c7f1f9f3a38a7c6fafe75d7f70ff4856d7"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.3.1"
+    version: "5.3.2"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -1018,6 +1034,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  source_gen:
+    dependency: transitive
+    description:
+      name: source_gen
+      sha256: fc0da689e5302edb6177fdd964efcb7f58912f43c28c2047a808f5bfff643d16
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.0"
   source_span:
     dependency: transitive
     description:

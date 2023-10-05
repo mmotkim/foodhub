@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -5,16 +6,17 @@ import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/components/form_submit_button.dart';
 import 'package:foodhub/gen/assets.gen.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
+import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/styles/animated_routes.dart';
 import 'package:foodhub/styles/custom_colors.dart';
 import 'package:foodhub/styles/custom_texts.dart';
 import 'package:foodhub/utils/input_validation.dart';
-import 'package:foodhub/views/loading_screen/loading_screen.dart';
 import 'package:foodhub/views/phoneVerification/phone_verify.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:reactive_phone_form_field/reactive_phone_form_field.dart';
 
+@RoutePage()
 class PhoneScreen extends StatefulWidget {
   const PhoneScreen({super.key});
 
@@ -114,8 +116,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
       print('$phoneNumberObj FUCKTARD');
       final phoneNumber = '+${phoneNumberObj.countryCode}${phoneNumberObj.nsn}';
       print(phoneNumber);
-      Navigator.of(context)
-          .push(AnimatedRoutes.slideRight(const VerificationScreen()));
+      context.router.push(const VerificationRoute());
 
       await authController.signInWithPhone(context, phoneNumber);
     } catch (e) {

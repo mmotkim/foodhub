@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/database/entity/VerificationCode.dart';
-import 'package:foodhub/database/repository/auth_DAO.dart';
+import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/styles/animated_routes.dart';
 import 'package:foodhub/utils/system_controller.dart';
 import 'package:foodhub/views/reset_password/email_sent.dart';
@@ -17,14 +18,12 @@ class EmailVerificationController {
 
   Future<void> requestResetPassword(BuildContext context, String email) async {
     final authController = Provider.of<AuthController>(context, listen: false);
-    final authDAO = AuthenticationDAO();
     final systemController =
         Provider.of<SystemController>(context, listen: false);
 
     try {
       systemController.showLoading();
-      Navigator.push(
-          context, AnimatedRoutes.slideRight(const EmailSentScreen()));
+      context.router.push(const EmailSentRoute());
 
       //checks if email belongs to account
 

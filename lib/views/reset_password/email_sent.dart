@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,14 +8,13 @@ import 'package:foodhub/auth/controllers/email_verification_controller.dart';
 import 'package:foodhub/components/bottom_help_text.dart';
 import 'package:foodhub/gen/assets.gen.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
-import 'package:foodhub/styles/animated_routes.dart';
 import 'package:foodhub/styles/custom_colors.dart';
 import 'package:foodhub/styles/custom_texts.dart';
-import 'package:foodhub/views/loading_screen/loading_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:reactive_pin_code_fields/reactive_pin_code_fields.dart';
 
+@RoutePage()
 class EmailSentScreen extends StatelessWidget {
   const EmailSentScreen({super.key});
 
@@ -144,8 +144,6 @@ class _CodeFormState extends State<CodeForm> {
   }
 
   _handleSubmit(String code) async {
-    final authProvider = Provider.of<AuthController>(context, listen: false);
-
     try {
       if (EmailVerificationController().verifyCode(context, code)) {
         EasyLoading.showSuccess('fuck yeah');

@@ -1,9 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/views/welcome/welcome.dart';
 import 'package:foodhub/gen/assets.gen.dart';
 
+@RoutePage()
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -14,17 +17,13 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+    super.initState();
     Future.delayed(
         Duration(
           milliseconds: 1500,
         ), () {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => WelcomeScreen()),
-        (Route<dynamic> route) => false,
-      );
+      context.router.replace(const WelcomeRoute());
     });
-    super.initState();
   }
 
   @override

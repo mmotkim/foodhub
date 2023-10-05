@@ -2,6 +2,7 @@
 
 import 'dart:math';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -112,10 +113,11 @@ class AuthController extends ChangeNotifier {
   }
 
   Future<UserCredential> signInWithGoogle(BuildContext context) async {
+    final systemController =
+        Provider.of<SystemController>(context, listen: false);
     try {
       // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
       // Obtain the auth details from the request
       final GoogleSignInAuthentication? googleAuth =
           await googleUser?.authentication;
@@ -127,16 +129,15 @@ class AuthController extends ChangeNotifier {
       );
 
       // Once signed in, return the UserCredential
-      Navigator.of(context).push(AnimatedRoutes.slideRight(LoadingScreen(
-        loadingMessage: LocaleKeys.authLoadingMessageSignUp.tr(),
-        loadedMessage: LocaleKeys.signInComplete.tr(),
-      )));
       return await FirebaseAuth.instance.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
       setErrorMessage(e.message!);
+      systemController.showError(e.message!);
       rethrow;
     } catch (_) {
       rethrow;
+    } finally {
+      systemController.dismiss();
     }
   }
 
@@ -180,6 +181,7 @@ class AuthController extends ChangeNotifier {
 
       print(userCredential.user?.phoneNumber);
       print(userCredential.user);
+
       // return userCredential.user != null ? true : false;
     } on FirebaseAuthException catch (e) {
       print(e.code);

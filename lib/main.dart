@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/auth/controllers/error_controller.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
+import 'package:foodhub/routes/app_router.dart';
 import 'package:foodhub/utils/system_controller.dart';
 import 'package:foodhub/views/loading_screen/loading_screen.dart';
 import 'package:foodhub/views/login/login.dart';
@@ -56,13 +57,22 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    print('alreadyAccount'.tr());
     super.initState();
+    print('alreadyAccount'.tr());
+    printShit();
   }
+
+  Future<void> printShit() async {
+    final locale = Locale('vi', 'VN');
+    // AppLocalizations ap = await AppLocalizations.delegate.load(locale);
+    // print(ap.alreadyAccount);
+  }
+
+  final _appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Flutter FoodHub',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFFE724C)),
@@ -76,13 +86,8 @@ class _MyAppState extends State<MyApp> {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      routes: {
-        'main_menu': (context) => const MainMemu(),
-        '/login': (context) => const LoginScreen(),
-        '/signup': (context) => const SignUpScreen()
-      },
+      routerConfig: _appRouter.config(),
       builder: EasyLoading.init(),
-      home: const SplashScreen(),
     );
   }
 }
