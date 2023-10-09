@@ -31,11 +31,12 @@
     "verificationCode": "Verification Code",
     "authVerificationBody": "Please type the verification code sent to",
     "goBack": "Go back",
-    "errorWrongCredentials": "Wrong email or address!",
+    "errorWrongCredentials": "Wrong password or email address!",
+    "errorWrongPassword": "Incorrect password",
     "errorEmailInUse": "This email is already used",
     "signUpComplete": "Account creation complete",
     "signInComplete": "Welcome",
-    "authVerificationBottom": "I don't receive a code!",
+    "authVerificationBottom": "I didn't receive a link!",
     "authVerificationBottomAction": "Please resend",
     "authVerificationError": "You entered a wrong code, please recheck",
     "resetPassword": "Reset password",
@@ -47,6 +48,17 @@
     "phoneRegistrationBody": "Enter your phone number to verify your account",
     "phoneWrongFormat": "Please enter a valid phone number.",
     "continueWithPhone": "Continue with Phone Number",
-    "errorWrongOTP": "Incorrect verification code"
+    "errorWrongOTP": "Incorrect verification code",
+    "changePassword": "Change password",
+    "changePasswordBody": "For security reasons, please enter your old password",
+    "changePasswordBodyNew": "Please enter your new password",
+    "changePasswordHint": "Old Password",
+    "newPassword": "Create New Password",
+    "newPasswordBody": "Set a strong password of at least 8 characters",
+    "newPasswordHint": "New Password",
+    "done": "Done",
+    "next": "Next",
+    "resend": "Resend",
+    "emailSentBody": "A verification email has been sent to {}, please check your emails (and spam folder) before continuing"
   }
   

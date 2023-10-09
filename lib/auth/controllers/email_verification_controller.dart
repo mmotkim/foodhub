@@ -5,11 +5,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
-import 'package:foodhub/database/entity/VerificationCode.dart';
+import 'package:foodhub/database/entity/verification_code.dart';
 import 'package:foodhub/routes/app_router.gr.dart';
-import 'package:foodhub/styles/animated_routes.dart';
 import 'package:foodhub/utils/system_controller.dart';
-import 'package:foodhub/views/reset_password/email_sent.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -83,7 +81,7 @@ class EmailVerificationController {
   }
 
   void requestFirebaseResetPassword(BuildContext context, String email) {
-    final authController = Provider.of<AuthController>(context, listen: false);
+    // final authController = Provider.of<AuthController>(context, listen: false);
   }
   // void setTimerForAutoRedirect(Function function) {
   //   _timer =

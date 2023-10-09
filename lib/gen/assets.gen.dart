@@ -9,6 +9,19 @@
 
 import 'package:flutter/widgets.dart';
 
+class $AssetsI18nGen {
+  const $AssetsI18nGen();
+
+  /// File path: assets/i18n/en-US.json
+  String get enUS => 'assets/i18n/en-US.json';
+
+  /// File path: assets/i18n/vi-VN.json
+  String get viVN => 'assets/i18n/vi-VN.json';
+
+  /// List of all assets
+  List<String> get values => [enUS, viVN];
+}
+
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
@@ -18,8 +31,14 @@ class $AssetsIconsGen {
   /// File path: assets/icons/gg.png
   AssetGenImage get gg => const AssetGenImage('assets/icons/gg.png');
 
+  /// File path: assets/icons/setting.png
+  AssetGenImage get setting => const AssetGenImage('assets/icons/setting.png');
+
+  /// File path: assets/icons/tab.png
+  AssetGenImage get tab => const AssetGenImage('assets/icons/tab.png');
+
   /// List of all assets
-  List<AssetGenImage> get values => [fb, gg];
+  List<AssetGenImage> get values => [fb, gg, setting, tab];
 }
 
 class $AssetsImagesGen {
@@ -43,17 +62,20 @@ class Assets {
   static const AssetGenImage background =
       AssetGenImage('assets/background.png');
   static const AssetGenImage brand = AssetGenImage('assets/brand.png');
+  static const $AssetsI18nGen i18n = $AssetsI18nGen();
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
   static const AssetGenImage logo = AssetGenImage('assets/logo.png');
   static const AssetGenImage logoSplash =
       AssetGenImage('assets/logoSplash.png');
+  static const AssetGenImage logoSplashBig =
+      AssetGenImage('assets/logoSplashBig.png');
   static const AssetGenImage splash = AssetGenImage('assets/splash.png');
   static const AssetGenImage topDeco = AssetGenImage('assets/topDeco.png');
 
   /// List of all assets
   List<AssetGenImage> get values =>
-      [background, brand, logo, logoSplash, splash, topDeco];
+      [background, brand, logo, logoSplash, logoSplashBig, splash, topDeco];
 }
 
 class AssetGenImage {

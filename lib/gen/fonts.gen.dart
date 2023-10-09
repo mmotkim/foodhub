@@ -12,4 +12,7 @@ class FontFamily {
 
   /// Font family: SofiaPro
   static const String sofiaPro = 'SofiaPro';
+
+  /// Font family: SofiaPro2
+  static const String sofiaPro2 = 'SofiaPro2';
 }

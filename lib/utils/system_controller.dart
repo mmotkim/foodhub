@@ -17,6 +17,10 @@ class SystemController extends ChangeNotifier {
     EasyLoading.show();
   }
 
+  void showSuccess(String message) {
+    EasyLoading.showSuccess(message);
+  }
+
   void handleFirebaseEx(String errorCode) {
     switch (errorCode) {
       case 'email-already-in-use':

@@ -7,7 +7,7 @@ class InputValidation {
   static FormControl<String> password = FormControl<String>(
     validators: [
       Validators.required,
-      Validators.minLength(8),
+      Validators.minLength(6),
       Validators.maxLength(16),
       Validators.pattern(r'^(?=.*[0-9]).+$',
           validationMessage: LocaleKeys.passwordOneNumber),

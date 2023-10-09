@@ -1,7 +1,10 @@
+import 'dart:ffi';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/components/big_field.dart';
 import 'package:foodhub/components/form_submit_button.dart';
@@ -15,16 +18,16 @@ import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 @RoutePage()
-class NewPasswordScreen extends StatefulWidget {
-  const NewPasswordScreen({super.key});
+class RetypePasswordScreen extends StatefulWidget {
+  const RetypePasswordScreen({super.key});
 
   @override
-  State<NewPasswordScreen> createState() => _NewPasswordScreenState();
+  State<RetypePasswordScreen> createState() => _RetypePasswordScreenState();
 }
 
-class _NewPasswordScreenState extends State<NewPasswordScreen> {
+class _RetypePasswordScreenState extends State<RetypePasswordScreen> {
   final form = FormGroup({
-    'password': InputValidation.password,
+    'password': InputValidation.passwordLogin,
   });
 
   @override
@@ -58,10 +61,10 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
         if (form.invalid) return;
         systemController.showLoading();
 
-        await authController.changePassword(context, password).then(
+        await authController.retypePassword(context, password).then(
               (value) => {
-                context.router.replace(const HomeRoute()),
-                systemController.showSuccess('Password Changed')
+                context.router.replace(const NewPasswordRoute()),
+                systemController.dismiss(),
               },
             );
       } on FirebaseAuthException catch (e) {
@@ -81,7 +84,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
             BigField.password(
               formName: 'password',
               controller: password,
-              hintText: LocaleKeys.newPasswordHint.tr(),
+              hintText: LocaleKeys.changePasswordHint.tr(),
               label: null,
               padding: 0.0,
             ),
@@ -135,9 +138,9 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
 
   SizedBox _body(BuildContext context) {
     return SizedBox(
-      width: 322,
+      width: 236,
       child: Text(
-        LocaleKeys.newPasswordBody.tr(),
+        LocaleKeys.changePasswordBody.tr(),
         style: CustomTextStyle.bodySmall(context),
       ),
     );

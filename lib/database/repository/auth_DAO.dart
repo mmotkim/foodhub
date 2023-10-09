@@ -1,5 +1,7 @@
+// ignore_for_file: file_names, avoid_print
+
 import 'package:firebase_database/firebase_database.dart';
-import 'package:foodhub/database/entity/VerificationCode.dart';
+import 'package:foodhub/database/entity/verification_code.dart';
 
 class AuthenticationDAO {
   Future<void> addVerificationCode(
@@ -7,7 +9,7 @@ class AuthenticationDAO {
     DatabaseReference ref = FirebaseDatabase.instance.ref("verification_code");
     // final snapshot = await ref.child('users/$userId').get();
 
-    final snapshot = await ref.child('$identity').get();
+    final snapshot = await ref.child(identity).get();
 
     if (snapshot.exists) {
       //handle code already exists

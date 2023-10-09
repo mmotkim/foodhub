@@ -32,17 +32,17 @@ class BigField extends StatefulWidget {
     this.padding,
   }) : super(key: key);
 
-  BigField.password({hintText, formName, controller, label, onChanged})
+  BigField.password({hintText, formName, controller, label, onChanged, padding})
       : this(
-          hintText: hintText,
-          obscureText: true,
-          textInputType: TextInputType.text,
-          label: label,
-          formName: formName,
-          controller: controller,
-          validationMessages: InputValidation.passwordSignUpMap,
-          onChanged: onChanged,
-        );
+            hintText: hintText,
+            obscureText: true,
+            textInputType: TextInputType.text,
+            label: label,
+            formName: formName,
+            controller: controller,
+            validationMessages: InputValidation.passwordSignUpMap,
+            onChanged: onChanged,
+            padding: padding);
 
   BigField.email({formName, controller, label, padding})
       : this(

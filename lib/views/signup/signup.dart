@@ -12,6 +12,7 @@ import 'package:foodhub/components/secondary_button.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/styles/animated_routes.dart';
+import 'package:foodhub/utils/form_utils.dart';
 import 'package:foodhub/utils/system_controller.dart';
 import 'package:foodhub/views/home_screen/home_screen.dart';
 import 'package:foodhub/views/login/login.dart';
@@ -53,7 +54,17 @@ import 'package:another_flushbar/flushbar.dart';
 //recheck command for localization X
 //optional: get context locale without context
 //fix google flow X
+//user session X
 //auto redirect on email_sent screen X
+//replace loading screens X
+
+//new reset password X
+//preload splash background X
+//existing routes in stack navigation X
+//Add timeout for resend email X
+//fix sign up with phone X
+//block custom authed user from changing password X
+//email verification ? -> REQUIRED after sign up with email/pass X (Added on after sign in + sign up with email/pass, splash screen)
 
 @RoutePage()
 class SignUpScreen extends StatefulWidget {
@@ -78,10 +89,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   void dispose() {
-    form.controls.forEach((key, value) {
-      value.updateValue('');
-      value.markAsUntouched();
-    });
+    FormUtils.disposeAll(form);
     super.dispose();
   }
 
@@ -105,24 +113,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
         final name = nameController.text.trim();
         print(email);
 
-        //go to loading screen
-        // Navigator.of(context).push(AnimatedRoutes.slideRight(LoadingScreen(
-        //   loadingMessage: LocaleKeys.authLoadingMessageSignUp.tr(),
-        //   loadedMessage: LocaleKeys.signUpComplete.tr(),
-        // )));
-
         //await firebase signup
         final result =
             await authProvider.signUp(context, email, password, name);
         print(result.user?.email);
         if (result.user != null && mounted) {
-          // Navigator.pushAndRemoveUntil(context,
-          //     AnimatedRoutes.slideRight(const HomeScreen()), (route) => false);
-          // context.router
-          //     .pushAndPopUntil(const HomeRoute(), predicate: (route) => false);
-          context.router.replaceAll([
-            const HomeRoute(),
-          ]);
+          await authProvider.sendEmailVerification(context).then((value) => {
+                context.router.push(
+                  EmailSentRoute2(email: email, isLoggedIn: true),
+                )
+              });
         }
 
         //clear message in case of return
@@ -134,9 +134,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
           value.updateValue('');
           value.markAsUntouched();
         });
-        // emailController.clear();
-        // passwordController.clear();
-        // nameController.clear();
       }
     } else {
       print('form is shit');
@@ -172,26 +169,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   List<Widget> signUpContent(BuildContext context) {
     return <Widget>[
       //Decoration
-      Container(
-        height: 80,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: Assets.topDeco.provider(),
-            fit: BoxFit.cover,
-          ),
-        ),
-      ),
+      _topDeco(),
       const SizedBox(height: 8.0),
 
       // Sign Up Heading Title
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 26.0),
-        child: Text(
-          'signUp',
-          style: CustomTextStyle.headlineLarge(context),
-        ).tr(),
-        // child: Text(LocaleKeys.signIn.tr()),
-      ),
+      _title(context),
       const SizedBox(height: 10),
       errorMessage(context),
       const SizedBox(height: 10.0),
@@ -302,6 +284,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ],
       )
     ];
+  }
+
+  Padding _title(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 26.0),
+      child: Text(
+        'signUp',
+        style: CustomTextStyle.headlineLarge(context),
+      ).tr(),
+      // child: Text(LocaleKeys.signIn.tr()),
+    );
+  }
+
+  Container _topDeco() {
+    return Container(
+      height: 80,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: Assets.topDeco.provider(),
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
   }
 
   Center errorMessage(BuildContext context) {

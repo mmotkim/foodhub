@@ -7,6 +7,8 @@ import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/auth/controllers/error_controller.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/routes/app_router.dart';
+import 'package:foodhub/utils/app_state.dart';
+import 'package:foodhub/utils/load_image.dart';
 import 'package:foodhub/utils/system_controller.dart';
 import 'package:foodhub/views/loading_screen/loading_screen.dart';
 import 'package:foodhub/views/login/login.dart';
@@ -30,6 +32,8 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  await loadInitialImages();
+
   runApp(
     EasyLocalization(
       supportedLocales: const [Locale('en', 'US'), Locale('vi', 'VN')],
@@ -40,6 +44,7 @@ Future<void> main() async {
           ChangeNotifierProvider(create: (context) => AuthController()),
           ChangeNotifierProvider(create: (context) => ErrorController()),
           ChangeNotifierProvider(create: (context) => SystemController()),
+          ChangeNotifierProvider(create: (context) => ApplicationState()),
         ],
         child: const MyApp(),
       ),
@@ -59,11 +64,12 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     print('alreadyAccount'.tr());
+
     printShit();
   }
 
   Future<void> printShit() async {
-    final locale = Locale('vi', 'VN');
+    // final locale = const Locale('vi', 'VN');
     // AppLocalizations ap = await AppLocalizations.delegate.load(locale);
     // print(ap.alreadyAccount);
   }

@@ -1,10 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/routes/app_router.gr.dart';
-import 'package:foodhub/views/welcome/welcome.dart';
+import 'package:foodhub/utils/app_state.dart';
 import 'package:foodhub/gen/assets.gen.dart';
+import 'package:provider/provider.dart';
 
 @RoutePage()
 class SplashScreen extends StatefulWidget {
@@ -18,12 +21,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(
-        Duration(
-          milliseconds: 1500,
-        ), () {
-      context.router.replace(const WelcomeRoute());
-    });
+
+    _init();
   }
 
   @override
@@ -57,5 +56,43 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _init() async {
+    final appState = Provider.of<ApplicationState>(context, listen: false);
+    String email = '';
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    print(fcmToken);
+
+    try {
+      appState.init();
+      Future.delayed(
+          const Duration(seconds: 2),
+          () => {
+                if (appState.loggedIn)
+                  {
+                    if (appState.needMailVerify)
+                      {
+                        email =
+                            Provider.of<AuthController>(context, listen: false)
+                                .getCurrentUser()!
+                                .email!,
+                        context.router.replaceAll([
+                          WelcomeRoute(),
+                          LoginRoute(),
+                          EmailSentRoute2(email: email, isLoggedIn: true),
+                        ])
+                      }
+                    else
+                      {
+                        context.router.replace(HomeRoute()),
+                      }
+                  }
+                else
+                  {context.router.replace(WelcomeRoute())}
+              });
+    } catch (_) {
+      print(_);
+    }
   }
 }

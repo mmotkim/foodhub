@@ -34,6 +34,7 @@ abstract class  LocaleKeys {
   static const authVerificationBody = 'authVerificationBody';
   static const goBack = 'goBack';
   static const errorWrongCredentials = 'errorWrongCredentials';
+  static const errorWrongPassword = 'errorWrongPassword';
   static const errorEmailInUse = 'errorEmailInUse';
   static const signUpComplete = 'signUpComplete';
   static const signInComplete = 'signInComplete';
@@ -50,5 +51,16 @@ abstract class  LocaleKeys {
   static const phoneWrongFormat = 'phoneWrongFormat';
   static const continueWithPhone = 'continueWithPhone';
   static const errorWrongOTP = 'errorWrongOTP';
+  static const changePassword = 'changePassword';
+  static const changePasswordBody = 'changePasswordBody';
+  static const changePasswordBodyNew = 'changePasswordBodyNew';
+  static const changePasswordHint = 'changePasswordHint';
+  static const newPassword = 'newPassword';
+  static const newPasswordBody = 'newPasswordBody';
+  static const newPasswordHint = 'newPasswordHint';
+  static const done = 'done';
+  static const next = 'next';
+  static const resend = 'resend';
+  static const emailSentBody = 'emailSentBody';
 
 }

@@ -18,7 +18,7 @@ class BottomHelpText extends StatelessWidget {
   final String text;
   final String actionText;
   final Color color;
-  final Color actionColor;
+  final Color? actionColor;
   final TextDecoration isUnderlined;
   final double? fontSize;
   final GestureTapCallback onPressed;
@@ -39,15 +39,17 @@ class BottomHelpText extends StatelessWidget {
       {required String text,
       required String actionText,
       required GestureTapCallback onPressed,
-      fontSize})
+      fontSize,
+      actionColor})
       : this(
-            text: text,
-            actionText: actionText,
-            color: const Color(0xFF5B5B5E),
-            actionColor: CustomColors.primary,
-            isUnderlined: TextDecoration.none,
-            onPressed: onPressed,
-            fontSize: fontSize);
+          text: text,
+          actionText: actionText,
+          color: const Color(0xFF5B5B5E),
+          actionColor: actionColor ?? CustomColors.primary,
+          isUnderlined: TextDecoration.none,
+          onPressed: onPressed,
+          fontSize: fontSize,
+        );
 
   @override
   Widget build(BuildContext context) {

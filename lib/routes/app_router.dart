@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:foodhub/routes/app_router.gr.dart';
 
 @AutoRouterConfig(replaceInRouteName: 'Screen,Route')
@@ -11,9 +12,18 @@ class AppRouter extends $AppRouter {
         AutoRoute(page: VerificationRoute.page),
         AutoRoute(page: ResetPasswordRoute.page),
         AutoRoute(page: SignUpRoute.page),
-        AutoRoute(page: WelcomeRoute.page),
         AutoRoute(page: EmailSentRoute.page),
         AutoRoute(page: EmailSentRoute2.page),
+        AutoRoute(page: RetypePasswordRoute.page),
+        AutoRoute(page: NewPasswordRoute.page),
+        CustomRoute(
+          page: WelcomeRoute.page,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+        ),
         AutoRoute(
           page: SplashRoute.page,
           initial: true,

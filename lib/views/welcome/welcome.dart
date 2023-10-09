@@ -1,12 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/routes/app_router.gr.dart';
-import 'package:foodhub/views/signup/signup.dart';
+import 'package:foodhub/utils/system_controller.dart';
 import 'package:foodhub/components/horizontal_separator.dart';
 import 'package:foodhub/components/social_button.dart';
 import 'package:foodhub/gen/assets.gen.dart';
@@ -30,10 +32,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Future<void> _onGoogle() async {
     final authController = Provider.of<AuthController>(context, listen: false);
-    authController.signInWithGoogle(context).then((value) => {
-          if (authController.getCurrentUser() != null)
-            {context.router.push(HomeRoute())}
-        });
+    final systemController = context.read<SystemController>();
+    try {
+      systemController.showLoading();
+      await authController.signInWithGoogle(context).then((value) => {
+            systemController.showSuccess('Welcome Back'),
+            context.router.push(HomeRoute()),
+          });
+    } catch (_) {
+      systemController.showError('Something went wrong');
+      print('mother fucker!$_');
+    } finally {}
   }
 
   @override
@@ -231,22 +240,4 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       ),
     );
   }
-}
-
-Route _createRoute(Widget page) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => page,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(1.0, 0.0);
-      const end = Offset.zero;
-      const curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-  );
 }

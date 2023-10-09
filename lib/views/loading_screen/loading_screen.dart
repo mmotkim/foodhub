@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/routes/app_router.gr.dart';
-import 'package:foodhub/views/home_screen/home_screen.dart';
 import 'package:foodhub/styles/custom_texts.dart';
 import 'package:provider/provider.dart';
 

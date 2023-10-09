@@ -7,11 +7,10 @@ import 'package:foodhub/components/bottom_help_text.dart';
 import 'package:foodhub/gen/assets.gen.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/routes/app_router.gr.dart';
-import 'package:foodhub/styles/animated_routes.dart';
 import 'package:foodhub/styles/custom_colors.dart';
 import 'package:foodhub/styles/custom_texts.dart';
+import 'package:foodhub/utils/app_state.dart';
 import 'package:foodhub/utils/system_controller.dart';
-import 'package:foodhub/views/loading_screen/loading_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:reactive_pin_code_fields/reactive_pin_code_fields.dart';
@@ -152,8 +151,12 @@ class _CodeFormState extends State<CodeForm> {
     try {
       systemController.showLoading();
       await authProvider.verifyOTP(code).then((value) => {
-            if (authProvider.errorMessage == null)
-              {context.router.push(const HomeRoute())}
+            if (context.read<ApplicationState>().loggedIn)
+              {
+                context.router.replaceAll([const HomeRoute()])
+              }
+            else
+              {systemController.showError(LocaleKeys.errorWrongOTP.tr())}
           });
     } catch (err) {
       systemController.showError('Something went wrong, please try again');

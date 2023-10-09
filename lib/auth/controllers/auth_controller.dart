@@ -2,15 +2,12 @@
 
 import 'dart:math';
 
-import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:foodhub/database/entity/VerificationCode.dart';
+import 'package:foodhub/database/entity/verification_code.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
-import 'package:foodhub/styles/animated_routes.dart';
 import 'package:foodhub/utils/system_controller.dart';
-import 'package:foodhub/views/loading_screen/loading_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
@@ -34,6 +31,37 @@ class AuthController extends ChangeNotifier {
   void setCode(String codeString) {
     code = codeString;
     notifyListeners();
+  }
+
+  // Get the current user - only after sure user is signed in
+  User? getCurrentUser() {
+    return _auth.currentUser;
+  }
+
+  Future<String?> getProviderName() async {
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        for (UserInfo userInfo in user.providerData) {
+          print(userInfo.providerId);
+          // Check each provider's type
+          if (userInfo.providerId == 'google.com') {
+            return 'Google'; // User is signed in with Google
+          } else if (userInfo.providerId == 'facebook.com') {
+            return 'Facebook'; // User is signed in with Facebook
+          } else if (userInfo.providerId == 'password') {
+            return 'Email/Password'; // User is signed in with email/password
+          } else if (userInfo.providerId == 'phone') {
+            return 'Phone';
+          }
+          // Add more conditions for other providers as needed
+        }
+      }
+      return null; // User is not authenticated with any known provider
+    } catch (e) {
+      print('Error getting provider name: $e');
+      return null; // Handle errors gracefully
+    }
   }
 
   // void handleGoogleSignIn(BuildContext context) async {
@@ -93,6 +121,7 @@ class AuthController extends ChangeNotifier {
       print(e.message);
       if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
         setErrorMessage(LocaleKeys.errorWrongCredentials.tr());
+        rethrow;
       } else {
         setErrorMessage(e.message!);
       }
@@ -102,14 +131,11 @@ class AuthController extends ChangeNotifier {
 
   // Sign out
   Future<void> signOut() async {
+    if (await getProviderName() == 'Google') {
+      await GoogleSignIn().disconnect();
+    }
     await _auth.signOut();
-    await GoogleSignIn().disconnect();
     notifyListeners();
-  }
-
-  // Get the current user
-  User? getCurrentUser() {
-    return _auth.currentUser;
   }
 
   Future<UserCredential> signInWithGoogle(BuildContext context) async {
@@ -194,9 +220,7 @@ class AuthController extends ChangeNotifier {
       // return true;
     } catch (_) {
       rethrow;
-    } finally {
-      clearErrorMessage();
-    }
+    } finally {}
   }
 
   Future<void> sendEmailVerification(BuildContext context) async {
@@ -228,7 +252,7 @@ class AuthController extends ChangeNotifier {
 
       await _auth.sendPasswordResetEmail(email: email);
 
-      systemController.showInfo('Done');
+      systemController.showInfo('Email sent');
     } on FirebaseAuthException catch (e) {
       systemController.handleFirebaseEx(e.code);
     } finally {
@@ -245,5 +269,50 @@ class AuthController extends ChangeNotifier {
     setCode(code);
 
     return VerificationCode(code: code, created: now);
+  }
+
+  // Sign in with email and password
+  Future<UserCredential> retypePassword(
+      BuildContext context, String password) async {
+    final systemController =
+        Provider.of<SystemController>(context, listen: false);
+
+    try {
+      systemController.showLoading();
+
+      String email = getCurrentUser()?.email ?? '';
+
+      return await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on FirebaseAuthException catch (e) {
+      print(e.code);
+      print(e.message);
+      if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
+        setErrorMessage(LocaleKeys.errorWrongPassword.tr());
+        systemController.showError(LocaleKeys.errorWrongPassword.tr());
+        rethrow;
+      } else {
+        setErrorMessage(e.message!);
+      }
+      rethrow;
+    } finally {}
+  }
+
+  Future<void> changePassword(BuildContext context, String password) async {
+    final systemController =
+        Provider.of<SystemController>(context, listen: false);
+
+    try {
+      systemController.showLoading();
+
+      await _auth.currentUser?.updatePassword(password);
+    } on FirebaseAuthException catch (e) {
+      print(e.code);
+      print(e.message);
+      setErrorMessage(e.message!);
+      rethrow;
+    } finally {}
   }
 }
