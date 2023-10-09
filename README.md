@@ -1,6 +1,7 @@
 # foodhub
 
-My demo flutter project using Firebase based from a Figma UI design FoodHub.
+My demo flutter project using Firebase based from a Figma UI design [FoodHub](https://www.figma.com/file/NueFWtgzXMvNDuUNStNHln/Untitled?type=design&node-id=0-1&t=hjis4Gk8cACMH5xI-0).
+
 Created from VSCode's flutter new Application project template 
 
 # Dev
@@ -13,11 +14,10 @@ Install Flutter SDK
 
 Make sure you have installed Android Studio and an appropriate Android SDK version, Android SDK Command-line Tools, and Android SDK Build-Tools
 (Required by Flutter)
+
 Run ```flutter doctor``` to confirm above installations.
 
-Launch Android Studio, click the Device Manager icon, and select Create Device under Virtual tab…
-In older versions of Android Studio, you should instead launch Android Studio > Tools > Android > AVD Manager and select Create Virtual Device…. (The Android submenu is only present when inside an Android project.)
-If you do not have a project open, you can choose 3-Dot Menu / More Actions > Virtual Device Manager and select Create Device…
+Launch Android Studio, click the Device Manager icon, and Create Device under Virtual tab…
 
 Then
 ``` 
@@ -26,8 +26,12 @@ flutter doctor --android-licenses
 
 Finally, on your preferred IDE, run
 
-```flutter pub get```
-```flutter run```
+```
+flutter pub get
+```
+```
+flutter run
+```
 
 # Generate Localization keys command
 
