@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:foodhub/api/user_api.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/auth/controllers/error_controller.dart';
 import 'package:foodhub/components/primary_button.dart';
@@ -316,7 +317,13 @@ class _SignUpFormState extends State<SignUpForm> {
           Center(
             child: FormSubmitButton(
               text: 'signUp'.tr().toUpperCase(),
-              onPressed: _handleSignUp,
+              // onPressed: _handleSignUp,
+              onPressed: () {
+                final paramData =
+                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1tb3RraW0yQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkzNjM3MSwiZXhwIjoxNjk2OTQ3MTcxfQ.ZhorCgMAXXsSizzti2C0JR-KWAza4XX5i7dKmgO74QU";
+
+                // UserApi.apiGetProfile(paramData);
+              },
             ),
           ),
         ],
