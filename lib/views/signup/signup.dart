@@ -13,7 +13,7 @@ import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/styles/animated_routes.dart';
 import 'package:foodhub/utils/form_utils.dart';
-import 'package:foodhub/utils/system_controller.dart';
+import 'package:foodhub/system/system_controller.dart';
 import 'package:foodhub/views/home_screen/home_screen.dart';
 import 'package:foodhub/views/login/login.dart';
 import 'package:foodhub/components/big_field.dart';
@@ -66,6 +66,8 @@ import 'package:another_flushbar/flushbar.dart';
 //block custom authed user from changing password X
 //email verification ? -> REQUIRED after sign up with email/pass X (Added on after sign in + sign up with email/pass, splash screen)
 
+//push notifications using firebase cloud messaging, 3 states
+
 @RoutePage()
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
@@ -99,18 +101,13 @@ class SignUpScreen extends StatelessWidget {
       const SizedBox(height: 10),
       errorMessage(context),
       const SizedBox(height: 10.0),
-      // Full name field
       const SignUpForm(),
-
-      //already have an account?
       const SizedBox(height: 20.0), // Spacing
       Center(
         child: BottomHelpText.light(
           text: '${'alreadyAccount'.tr()}?  ',
           actionText: 'login'.tr(),
           onPressed: () {
-            // Navigator.of(context)
-            //     .push(AnimatedRoutes.slideRight(const LoginScreen()));
             context.router.navigate(const LoginRoute());
           },
         ),
@@ -145,8 +142,6 @@ class SignUpScreen extends StatelessWidget {
               child: SecondaryButton(
                 text: 'Continue with phone number',
                 onPressed: () {
-                  // Navigator.push(
-                  //     context, AnimatedRoutes.slideRight(const PhoneScreen()));
                   context.router.push(const PhoneRoute());
                 },
                 height: 60,

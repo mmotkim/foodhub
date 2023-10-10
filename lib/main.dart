@@ -1,5 +1,6 @@
 // ignore_for_file: unused_import
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -7,9 +8,10 @@ import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/auth/controllers/error_controller.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/routes/app_router.dart';
+import 'package:foodhub/system/notification_controller.dart';
 import 'package:foodhub/utils/app_state.dart';
 import 'package:foodhub/utils/load_image.dart';
-import 'package:foodhub/utils/system_controller.dart';
+import 'package:foodhub/system/system_controller.dart';
 import 'package:foodhub/views/loading_screen/loading_screen.dart';
 import 'package:foodhub/views/login/login.dart';
 import 'package:foodhub/views/main_menu.dart';
@@ -22,16 +24,26 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:rxdart/rxdart.dart';
+
+final _messageStreamController = BehaviorSubject<RemoteMessage>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await dotenv.load(fileName: ".env");
 
+  //Firebase initialization
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  //Notification
+  NotificationController.foregroundListen(_messageStreamController);
+  FirebaseMessaging.onBackgroundMessage(
+      NotificationController.firebaseMessagingBackgroundHandler);
+
+  //preload images
   await loadInitialImages();
 
   runApp(
@@ -60,6 +72,23 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  String _lastMessage = "";
+
+  _MyAppState() {
+    _messageStreamController.listen((message) {
+      setState(() {
+        if (message.notification != null) {
+          _lastMessage = 'Received a notification message:'
+              '\nTitle=${message.notification?.title},'
+              '\nBody=${message.notification?.body},'
+              '\nData=${message.data}';
+        } else {
+          _lastMessage = 'Received a data message: ${message.data}';
+        }
+      });
+    });
+  }
+
   @override
   void initState() {
     super.initState();

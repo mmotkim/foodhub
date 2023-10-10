@@ -10,7 +10,7 @@ import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/utils/app_state.dart';
 import 'package:foodhub/utils/form_utils.dart';
-import 'package:foodhub/utils/system_controller.dart';
+import 'package:foodhub/system/system_controller.dart';
 import 'package:foodhub/components/big_field.dart';
 import 'package:foodhub/components/bottom_help_text.dart';
 import 'package:foodhub/components/form_submit_button.dart';

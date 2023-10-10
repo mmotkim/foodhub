@@ -13,7 +13,7 @@ import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/styles/custom_texts.dart';
 import 'package:foodhub/utils/input_validation.dart';
-import 'package:foodhub/utils/system_controller.dart';
+import 'package:foodhub/system/system_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 

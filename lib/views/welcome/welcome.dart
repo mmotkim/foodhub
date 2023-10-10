@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/routes/app_router.gr.dart';
-import 'package:foodhub/utils/system_controller.dart';
+import 'package:foodhub/system/system_controller.dart';
 import 'package:foodhub/components/horizontal_separator.dart';
 import 'package:foodhub/components/social_button.dart';
 import 'package:foodhub/gen/assets.gen.dart';

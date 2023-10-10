@@ -7,7 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/database/entity/verification_code.dart';
 import 'package:foodhub/routes/app_router.gr.dart';
-import 'package:foodhub/utils/system_controller.dart';
+import 'package:foodhub/system/system_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 

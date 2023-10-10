@@ -10,7 +10,7 @@ import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/styles/custom_colors.dart';
 import 'package:foodhub/styles/custom_texts.dart';
 import 'package:foodhub/utils/app_state.dart';
-import 'package:foodhub/utils/system_controller.dart';
+import 'package:foodhub/system/system_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:reactive_pin_code_fields/reactive_pin_code_fields.dart';
