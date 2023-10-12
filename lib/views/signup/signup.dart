@@ -1,11 +1,11 @@
 // ignore_for_file: avoid_print, unused_import
 
 import 'package:auto_route/auto_route.dart';
+import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:foodhub/api/user_api.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/auth/controllers/error_controller.dart';
 import 'package:foodhub/components/primary_button.dart';
@@ -40,7 +40,7 @@ import 'package:another_flushbar/flushbar.dart';
 //custom colors X
 //seperate validators X
 //fix validation message location - new class for error messages - showError property in reactiveFormField - used onChanged instead - back to showError X
-//setup user session
+//setup user session X
 
 //add google's X
 //recode UX on auth X
@@ -52,8 +52,8 @@ import 'package:another_flushbar/flushbar.dart';
 //4 chars code X
 
 //dedicated router X
-//recheck command for localization X
-//optional: get context locale without context
+//recheck command for localization X -> add script for when building apk
+//optional: get context locale without context X 
 //fix google flow X
 //user session X
 //auto redirect on email_sent screen X
@@ -63,11 +63,18 @@ import 'package:another_flushbar/flushbar.dart';
 //preload splash background X
 //existing routes in stack navigation X
 //Add timeout for resend email X
-//fix sign up with phone X
+//fix sign up with phone Xz
 //block custom authed user from changing password X
 //email verification ? -> REQUIRED after sign up with email/pass X (Added on after sign in + sign up with email/pass, splash screen)
 
 //push notifications using firebase cloud messaging, 3 states
+//sent localization msg without context X
+
+//ask for push notificiation permission 
+//FCM token for backend 
+//don't just dispose fields when error 
+//listen for email verification state on email sent screen 
+//main menu design: remember state on changing drawers 
 
 @RoutePage()
 class SignUpScreen extends StatelessWidget {
@@ -114,7 +121,8 @@ class SignUpScreen extends StatelessWidget {
         ),
       ),
 
-      const SizedBox(height: 20.0), // Spacing
+      const SizedBox(height: 20.0), 
+      // Spacing
       // Sign in with Text and Vertical Lines
       // HorizontalSeparator.dark(text: 'signUpWith'.tr()),
       // const SizedBox(height: 15.0), // Spacing
@@ -135,41 +143,49 @@ class SignUpScreen extends StatelessWidget {
       //   ),
       // ),
       const SizedBox(height: 15),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 26.0),
-        child: Row(
-          children: [
-            Expanded(
-              child: SecondaryButton(
-                text: 'Continue with phone number',
-                onPressed: () {
-                  context.router.push(const PhoneRoute());
-                },
-                height: 60,
-              ),
-            ),
-          ],
-        ),
-      ),
+      _continueWithPhone(context),
       const SizedBox(height: 28),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          TextButton(
-            onPressed: () {
-              context.setLocale(const Locale('en', 'US'));
-            },
-            child: const Text('English'),
-          ),
-          TextButton(
-            onPressed: () {
-              context.setLocale(const Locale('vi', 'VN'));
-            },
-            child: const Text('twat'),
-          )
-        ],
-      )
+      _localeSwitcher(context)
     ];
+  }
+
+  Row _localeSwitcher(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        TextButton(
+          onPressed: () {
+            context.setLocale(const Locale('en', 'US'));
+          },
+          child: const Text('English'),
+        ),
+        TextButton(
+          onPressed: () {
+            context.setLocale(const Locale('vi', 'VN'));
+          },
+          child: const Text('twat'),
+        )
+      ],
+    );
+  }
+
+  Padding _continueWithPhone(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 26.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: SecondaryButton(
+              text: LocaleKeys.continueWithPhone.tr(),
+              onPressed: () {
+                context.router.push(const PhoneRoute());
+              },
+              height: 60,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Padding _title(BuildContext context) {
@@ -317,13 +333,7 @@ class _SignUpFormState extends State<SignUpForm> {
           Center(
             child: FormSubmitButton(
               text: 'signUp'.tr().toUpperCase(),
-              // onPressed: _handleSignUp,
-              onPressed: () {
-                final paramData =
-                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1tb3RraW0yQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkzNjM3MSwiZXhwIjoxNjk2OTQ3MTcxfQ.ZhorCgMAXXsSizzti2C0JR-KWAza4XX5i7dKmgO74QU";
-
-                // UserApi.apiGetProfile(paramData);
-              },
+              onPressed: _handleSignUp,
             ),
           ),
         ],

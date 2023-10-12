@@ -14,8 +14,7 @@ class NotificationController {
     });
   }
 
-  static Future<void> firebaseMessagingBackgroundHandler(
-      RemoteMessage message) async {
+  static Future<void> backgroundHandler(RemoteMessage message) async {
     print("Handling a background message: ${message.messageId}");
     print('Message data: ${message.data}');
     print('Message notification: ${message.notification?.title}');

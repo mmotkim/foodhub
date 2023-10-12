@@ -3,9 +3,13 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:foodhub/api/custom_interceptor.dart';
+import 'package:foodhub/api/rest_client.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
+import 'package:foodhub/database/prefs_provider.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/system/system_controller.dart';
@@ -169,7 +173,21 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           onPressed: () {},
         ),
         SocialButton.google(
-          onPressed: _onGoogle,
+          // onPressed: _onGoogle,
+          onPressed: () async {
+            final dio = Dio();
+            dio.interceptors.add(Custominterceptor());
+            final client = RestClient(dio);
+            final body = {
+              "email": "mmotkim2@gmail.com",
+              "password": "123456",
+            };
+            final user = await client.apiSignIn(body);
+            PrefsProvider.saveToken(user.results.token);
+            PrefsProvider.saveRefreshToken(user.results.refreshToken);
+            final profile = await client.apiGetProfile();
+            print('PROFILTHY: ${profile.toString()}');
+          },
         ),
       ],
     );

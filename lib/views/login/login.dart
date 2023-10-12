@@ -8,7 +8,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/routes/app_router.gr.dart';
-import 'package:foodhub/utils/app_state.dart';
 import 'package:foodhub/utils/form_utils.dart';
 import 'package:foodhub/system/system_controller.dart';
 import 'package:foodhub/components/big_field.dart';

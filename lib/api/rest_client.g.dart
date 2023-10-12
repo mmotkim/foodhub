@@ -52,7 +52,8 @@ class _RestClient implements RestClient {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
+    _data.addAll(paramData);
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<UserResponseEntity>(Options(
       method: 'POST',
@@ -61,7 +62,7 @@ class _RestClient implements RestClient {
     )
             .compose(
               _dio.options,
-              'user/sign-up',
+              '/user/sign-up',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -79,7 +80,8 @@ class _RestClient implements RestClient {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
+    _data.addAll(paramData);
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<UserResponseEntity>(Options(
       method: 'POST',
@@ -88,7 +90,7 @@ class _RestClient implements RestClient {
     )
             .compose(
               _dio.options,
-              'user/sign-in',
+              '/user/sign-in',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -115,7 +117,7 @@ class _RestClient implements RestClient {
     )
             .compose(
               _dio.options,
-              'user/refresh-token',
+              '/user/refresh-token',
               queryParameters: queryParameters,
               data: _data,
             )

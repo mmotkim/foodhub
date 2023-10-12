@@ -1,13 +1,17 @@
 // ignore_for_file: unused_import
 
+import 'package:auto_route/auto_route.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/auth/controllers/error_controller.dart';
+import 'package:foodhub/database/prefs_provider.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
+import 'package:foodhub/l10n/app_localizations.dart';
 import 'package:foodhub/routes/app_router.dart';
+import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/system/notification_controller.dart';
 import 'package:foodhub/utils/app_state.dart';
 import 'package:foodhub/utils/load_image.dart';
@@ -38,17 +42,25 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  //Local storage
+  await PrefsProvider.load();
+
   //Notification
-  NotificationController.foregroundListen(_messageStreamController);
-  FirebaseMessaging.onBackgroundMessage(
-      NotificationController.firebaseMessagingBackgroundHandler);
+  NotificationController.foregroundListen(_messageStreamController); // foreground
+  FirebaseMessaging.onBackgroundMessage(NotificationController.backgroundHandler); //background
+  // final RemoteMessage? message = await FirebaseMessaging.instance.getInitialMessage();
+
 
   //preload images
   await loadInitialImages();
 
+  //localization without context
+  final t = await AppLocalizations.delegate.load(await PrefsProvider.getLocale() ?? const Locale('en'));
+  debugPrint(t.helloWorld);
+
   runApp(
     EasyLocalization(
-      supportedLocales: const [Locale('en', 'US'), Locale('vi', 'VN')],
+      supportedLocales: const [Locale('en', 'US'), Locale('vi', 'VN'), Locale('en'), Locale('vi')],
       path: 'assets/i18n',
       fallbackLocale: const Locale('vi', 'VN'),
       child: MultiProvider(
@@ -75,6 +87,7 @@ class _MyAppState extends State<MyApp> {
   String _lastMessage = "";
 
   _MyAppState() {
+    //receiving foreground message, for UI changes
     _messageStreamController.listen((message) {
       setState(() {
         if (message.notification != null) {
@@ -89,18 +102,23 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  Future<void> backgroundHandler() async {
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage(); //terminated
+    if (initialMessage != null) {
+      print('terminated msg received!');
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        context.router
+            .push(EmailSentRoute2(email: 'pushed from bg msg ${initialMessage.toString()}', isLoggedIn: false));
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    print('alreadyAccount'.tr());
+    debugPrint('alreadyAccount'.tr());
 
-    printShit();
-  }
-
-  Future<void> printShit() async {
-    // final locale = const Locale('vi', 'VN');
-    // AppLocalizations ap = await AppLocalizations.delegate.load(locale);
-    // print(ap.alreadyAccount);
+    backgroundHandler();
   }
 
   final _appRouter = AppRouter();

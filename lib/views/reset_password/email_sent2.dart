@@ -15,8 +15,7 @@ import 'package:provider/provider.dart';
 
 @RoutePage()
 class EmailSentScreen2 extends StatefulWidget {
-  const EmailSentScreen2(
-      {super.key, required this.email, required this.isLoggedIn});
+  const EmailSentScreen2({super.key, required this.email, required this.isLoggedIn});
   final String email;
   final bool isLoggedIn;
 
@@ -24,16 +23,15 @@ class EmailSentScreen2 extends StatefulWidget {
   State<EmailSentScreen2> createState() => _EmailSentScreen2State();
 }
 
-class _EmailSentScreen2State extends State<EmailSentScreen2>
-    with WidgetsBindingObserver {
+class _EmailSentScreen2State extends State<EmailSentScreen2> with WidgetsBindingObserver {
   int _secondsRemaining = 60;
+
   Timer? _timer;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
-    _secondsRemaining = 0;
+    _startTimer();
   }
 
   @override
@@ -41,10 +39,6 @@ class _EmailSentScreen2State extends State<EmailSentScreen2>
     super.didChangeAppLifecycleState(state);
 
     if (state == AppLifecycleState.resumed) {
-      print('fuckss');
-      // Navigator.of(context).popUntil((route) {
-      //   return route.isFirst || route.settings.name == '/login';
-      // });
       context.router.popUntilRouteWithName(LoginRoute.name);
     }
   }
@@ -62,9 +56,6 @@ class _EmailSentScreen2State extends State<EmailSentScreen2>
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_secondsRemaining == 0) {
         timer.cancel();
-        setState(() {
-          // Enable the resend button
-        });
       } else {
         setState(() {
           _secondsRemaining--;
@@ -100,10 +91,7 @@ class _EmailSentScreen2State extends State<EmailSentScreen2>
             const SizedBox(height: 15),
             _bottomHelpText(),
             const SizedBox(height: 38),
-            SecondaryButton(
-                text: LocaleKeys.resetPasswordCompleteAction.tr(),
-                onPressed: onPressed,
-                width: 248),
+            SecondaryButton(text: LocaleKeys.resetPasswordCompleteAction.tr(), onPressed: onPressed, width: 248),
           ],
         ),
       ),
@@ -139,9 +127,8 @@ class _EmailSentScreen2State extends State<EmailSentScreen2>
         valueListenable: ValueNotifier(_secondsRemaining),
         builder: (context, value, child) => BottomHelpText.light(
           text: '${LocaleKeys.authVerificationBottom.tr()} ',
-          actionText: value == 0
-              ? LocaleKeys.authVerificationBottomAction.tr()
-              : '${LocaleKeys.resend.tr()} in $value seconds',
+          actionText:
+              value == 0 ? LocaleKeys.authVerificationBottomAction.tr() : '${LocaleKeys.resend.tr()} in $value seconds',
           onPressed: () {
             value > 0 ? null : resend(context);
           },

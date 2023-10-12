@@ -4,7 +4,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
-import 'package:foodhub/auth/controllers/email_verification_controller.dart';
 import 'package:foodhub/components/big_field.dart';
 import 'package:foodhub/components/form_submit_button.dart';
 import 'package:foodhub/gen/assets.gen.dart';
@@ -62,7 +61,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     }
 
     onPressedLoggedIn(BuildContext context) async {
-      String email = form.control('email').value.trim();
+      // String email = form.control('email').value.trim();
 
       if (form.valid) {
         // EmailVerificationController().requestResetPassword(context, email);
