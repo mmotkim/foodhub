@@ -1,5 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart'
-    hide EmailAuthProvider, PhoneAuthProvider;
+import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider, PhoneAuthProvider;
 // import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +10,18 @@ class ApplicationState extends ChangeNotifier {
   bool _needMailVerify = false;
   bool get loggedIn => _loggedIn;
   bool get needMailVerify => _needMailVerify;
+
+  // Set functions for loggedIn and needMailVerify
+  set setLoggedIn(bool value) {
+    _loggedIn = value;
+    notifyListeners();
+  }
+
+  set setNeedMailVerify(bool value) {
+    _needMailVerify = value;
+    notifyListeners();
+  }
+
   Future<void> init() async {
     //ALSO CHECK IF EMAIL VERIFIED
     // FirebaseUIAuth.configureProviders([

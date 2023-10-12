@@ -32,6 +32,8 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:foodhub/views/loading_screen/loading_screen.dart';
 import 'package:another_flushbar/flushbar.dart';
 
+import 'sign_up_form.dart';
+
 //check responsiveness
 //more customizable parameters for field
 
@@ -75,6 +77,9 @@ import 'package:another_flushbar/flushbar.dart';
 //don't just dispose fields when error 
 //listen for email verification state on email sent screen 
 //main menu design: remember state on changing drawers 
+
+//flutter_secure_storage X
+//prevent swiping back on home screen
 
 @RoutePage()
 class SignUpScreen extends StatelessWidget {
@@ -219,125 +224,3 @@ class SignUpScreen extends StatelessWidget {
   }
 }
 
-//Stateful form
-class SignUpForm extends StatefulWidget {
-  const SignUpForm({super.key});
-
-  @override
-  State<SignUpForm> createState() => _SignUpFormState();
-}
-
-class _SignUpFormState extends State<SignUpForm> {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final nameController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<AuthController>().clearErrorMessage();
-    });
-  }
-
-  @override
-  void dispose() {
-    FormUtils.disposeAll(form);
-    super.dispose();
-  }
-
-  //input validations
-  final form = FormGroup({
-    'name': InputValidation.name,
-    'email': InputValidation.email,
-    'password': InputValidation.password,
-  });
-
-  void _handleSignUp() async {
-    final authProvider = Provider.of<AuthController>(context, listen: false);
-    final systemController =
-        Provider.of<SystemController>(context, listen: false);
-
-    if (form.valid) {
-      try {
-        //get input
-        final email = emailController.text.trim();
-        final password = passwordController.text.trim();
-        final name = nameController.text.trim();
-        print(email);
-
-        //await firebase signup
-        final result =
-            await authProvider.signUp(context, email, password, name);
-        print(result.user?.email);
-        if (result.user != null && mounted) {
-          await authProvider.sendEmailVerification(context).then((value) => {
-                context.router.push(
-                  EmailSentRoute2(email: email, isLoggedIn: true),
-                )
-              });
-        }
-
-        //clear message in case of return
-        authProvider.clearErrorMessage();
-      } on FirebaseAuthException catch (err) {
-        systemController.handleFirebaseEx(err.code);
-      } finally {
-        form.controls.forEach((key, value) {
-          value.updateValue('');
-          value.markAsUntouched();
-        });
-      }
-    } else {
-      print('form is shit');
-
-      print(form.errors);
-      form.errors.forEach((key, value) {
-        print('$key $value');
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ReactiveForm(
-      formGroup: form,
-      child: Column(
-        children: [
-          BigField(
-            hintText: 'nameGuide'.tr(),
-            obscureText: false, //obscureText
-            textInputType: TextInputType.text,
-            label: 'fullName'.tr(),
-            formName: 'name',
-            controller: nameController,
-            validationMessages: InputValidation.nameMap,
-          ),
-          const SizedBox(height: 18.0), // Spacing
-          // Email Field
-          BigField.email(
-            formName: 'email',
-            controller: emailController,
-            label: 'email'.tr(),
-          ),
-          // Password Field
-          const SizedBox(height: 18.0), // Spacing
-          BigField.password(
-            hintText: 'passGuide'.tr(),
-            formName: 'password',
-            controller: passwordController,
-            label: 'pass'.tr(),
-          ), // Sign-Up Button
-          const SizedBox(height: 33.0), // Spacing
-
-          Center(
-            child: FormSubmitButton(
-              text: 'signUp'.tr().toUpperCase(),
-              onPressed: _handleSignUp,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

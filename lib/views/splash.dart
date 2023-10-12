@@ -61,8 +61,6 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _init() async {
     final appState = Provider.of<ApplicationState>(context, listen: false);
     String email = '';
-    final fcmToken = await FirebaseMessaging.instance.getToken();
-    print(fcmToken);
 
     try {
       appState.init();
@@ -73,10 +71,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   {
                     if (appState.needMailVerify)
                       {
-                        email =
-                            Provider.of<AuthController>(context, listen: false)
-                                .getCurrentUser()!
-                                .email!,
+                        email = Provider.of<AuthController>(context, listen: false).getCurrentUser()!.email!,
                         context.router.replaceAll([
                           WelcomeRoute(),
                           LoginRoute(),

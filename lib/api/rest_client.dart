@@ -10,7 +10,7 @@ abstract class RestClient {
   factory RestClient(Dio dio, {String baseUrl}) = _RestClient;
 
   @GET('/user/profile')
-  Future<UserResponseEntity> apiGetProfile();
+  Future<UserResponseEntity> apiGetProfile(@Query('id') String id);
 
   @POST('/user/sign-up')
   Future<UserResponseEntity> apiSignUp(@Body() Map<String, dynamic> paramData);

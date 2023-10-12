@@ -38,4 +38,5 @@ Future<void> loadImage(ImageProvider provider) {
 
 Future<void> loadInitialImages() async {
   await loadImage(Assets.images.welcomeBG.provider());
+  await loadImage(Assets.topDeco.provider());
 }

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:async';
+import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:dio/dio.dart';
@@ -8,6 +9,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:foodhub/api/custom_interceptor.dart';
 import 'package:foodhub/api/rest_client.dart';
+import 'package:foodhub/auth/controllers/api_auth_controller.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/database/prefs_provider.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
@@ -99,8 +101,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Container _welcomeBG() {
     return Container(
       decoration: BoxDecoration(
-        image: DecorationImage(
-            image: Assets.images.welcomeBG.provider(), fit: BoxFit.cover),
+        image: DecorationImage(image: Assets.images.welcomeBG.provider(), fit: BoxFit.cover),
       ),
     );
   }
@@ -143,8 +144,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           context.router.push(SignUpRoute());
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor:
-              Colors.transparent, // Make the ElevatedButton transparent
+          backgroundColor: Colors.transparent, // Make the ElevatedButton transparent
           shadowColor: Colors.transparent, // Remove shadow
         ),
         child: Text('signInEmail'.tr(),
@@ -173,21 +173,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           onPressed: () {},
         ),
         SocialButton.google(
-          // onPressed: _onGoogle,
-          onPressed: () async {
-            final dio = Dio();
-            dio.interceptors.add(Custominterceptor());
-            final client = RestClient(dio);
-            final body = {
-              "email": "mmotkim2@gmail.com",
-              "password": "123456",
-            };
-            final user = await client.apiSignIn(body);
-            PrefsProvider.saveToken(user.results.token);
-            PrefsProvider.saveRefreshToken(user.results.refreshToken);
-            final profile = await client.apiGetProfile();
-            print('PROFILTHY: ${profile.toString()}');
-          },
+          onPressed: _onGoogle,
+          // onPressed: () async {
+          //   final apiAuthController = Provider.of<ApiAuthController>(context, listen: false);
+          //   const email = "mmotkim2@gmail.com";
+          //   const password = "123456";
+          //   final user = await apiAuthController.signIn(context, email, password);
+
+          //   final profile = await apiAuthController.getProfile();
+          //   print('PROFILTHY: ${profile.toJson()}');
+          // },
         ),
       ],
     );
@@ -207,12 +202,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               fontWeight: FontWeight.w500,
               height: 1.5,
               fontFamily: 'SofiaPro',
-              shadows: [
-                Shadow(
-                    blurRadius: 10.0,
-                    color: Colors.black.withOpacity(0.2),
-                    offset: Offset(0, 5))
-              ]),
+              shadows: [Shadow(blurRadius: 10.0, color: Colors.black.withOpacity(0.2), offset: Offset(0, 5))]),
         ),
       ),
     );

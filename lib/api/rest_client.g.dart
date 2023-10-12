@@ -21,9 +21,9 @@ class _RestClient implements RestClient {
   String? baseUrl;
 
   @override
-  Future<UserResponseEntity> apiGetProfile() async {
+  Future<UserResponseEntity> apiGetProfile(String id) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'id': id};
     final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
     final _result = await _dio

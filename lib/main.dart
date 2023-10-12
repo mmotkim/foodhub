@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:foodhub/auth/controllers/api_auth_controller.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/auth/controllers/error_controller.dart';
 import 'package:foodhub/database/prefs_provider.dart';
@@ -42,14 +43,13 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  //Local storage
+  //Local Secure storage
   await PrefsProvider.load();
 
   //Notification
   NotificationController.foregroundListen(_messageStreamController); // foreground
   FirebaseMessaging.onBackgroundMessage(NotificationController.backgroundHandler); //background
   // final RemoteMessage? message = await FirebaseMessaging.instance.getInitialMessage();
-
 
   //preload images
   await loadInitialImages();
@@ -69,6 +69,9 @@ Future<void> main() async {
           ChangeNotifierProvider(create: (context) => ErrorController()),
           ChangeNotifierProvider(create: (context) => SystemController()),
           ChangeNotifierProvider(create: (context) => ApplicationState()),
+          ChangeNotifierProvider(
+            create: (context) => ApiAuthController(),
+          )
         ],
         child: const MyApp(),
       ),

@@ -23,7 +23,6 @@ class AuthController extends ChangeNotifier {
   }
 
   void clearErrorMessage() {
-    print("clearedErrorMessage");
     errorMessage = null; // Clear the error message
     notifyListeners();
   }
@@ -75,10 +74,8 @@ class AuthController extends ChangeNotifier {
   // }
 
   // Sign up with email and password
-  Future<UserCredential> signUp(BuildContext context, String email,
-      String password, String fullName) async {
-    final systemController =
-        Provider.of<SystemController>(context, listen: false);
+  Future<UserCredential> signUp(BuildContext context, String email, String password, String fullName) async {
+    final systemController = Provider.of<SystemController>(context, listen: false);
     try {
       systemController.showLoading();
 
@@ -100,16 +97,13 @@ class AuthController extends ChangeNotifier {
       }
       rethrow;
     } finally {
-      Future.delayed(
-          const Duration(milliseconds: 1500), () => systemController.dismiss());
+      Future.delayed(const Duration(milliseconds: 1500), () => systemController.dismiss());
     }
   }
 
   // Sign in with email and password
-  Future<UserCredential> signIn(
-      BuildContext context, String email, String password) async {
-    final systemController =
-        Provider.of<SystemController>(context, listen: false);
+  Future<UserCredential> signIn(BuildContext context, String email, String password) async {
+    final systemController = Provider.of<SystemController>(context, listen: false);
     try {
       systemController.showLoading();
       return await _auth.signInWithEmailAndPassword(
@@ -139,14 +133,12 @@ class AuthController extends ChangeNotifier {
   }
 
   Future<UserCredential> signInWithGoogle(BuildContext context) async {
-    final systemController =
-        Provider.of<SystemController>(context, listen: false);
+    final systemController = Provider.of<SystemController>(context, listen: false);
     try {
       // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       // Obtain the auth details from the request
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
+      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
       // Create a new credential
       final credential = GoogleAuthProvider.credential(
@@ -199,11 +191,9 @@ class AuthController extends ChangeNotifier {
   Future<void> verifyOTP(String otp) async {
     final auth = FirebaseAuth.instance;
     try {
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(
-          verificationId: verificationId, smsCode: otp);
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: otp);
 
-      UserCredential userCredential =
-          await auth.signInWithCredential(credential);
+      UserCredential userCredential = await auth.signInWithCredential(credential);
 
       print(userCredential.user?.phoneNumber);
       print(userCredential.user);
@@ -224,8 +214,7 @@ class AuthController extends ChangeNotifier {
   }
 
   Future<void> sendEmailVerification(BuildContext context) async {
-    final systemController =
-        Provider.of<SystemController>(context, listen: false);
+    final systemController = Provider.of<SystemController>(context, listen: false);
 
     try {
       systemController.showLoading();
@@ -238,14 +227,11 @@ class AuthController extends ChangeNotifier {
     }
   }
 
-  Future<void> sendPasswordResetEmail(
-      BuildContext context, String email) async {
-    final systemController =
-        Provider.of<SystemController>(context, listen: false);
+  Future<void> sendPasswordResetEmail(BuildContext context, String email) async {
+    final systemController = Provider.of<SystemController>(context, listen: false);
 
     //set locale
-    await FirebaseAuth.instance
-        .setLanguageCode(context.locale.languageCode.toString());
+    await FirebaseAuth.instance.setLanguageCode(context.locale.languageCode.toString());
 
     try {
       systemController.showLoading();
@@ -264,18 +250,15 @@ class AuthController extends ChangeNotifier {
     var r = Random();
     const chars = '0123456789';
     final now = DateTime.now();
-    String code =
-        List.generate(len, (index) => chars[r.nextInt(chars.length)]).join();
+    String code = List.generate(len, (index) => chars[r.nextInt(chars.length)]).join();
     setCode(code);
 
     return VerificationCode(code: code, created: now);
   }
 
   // Sign in with email and password
-  Future<UserCredential> retypePassword(
-      BuildContext context, String password) async {
-    final systemController =
-        Provider.of<SystemController>(context, listen: false);
+  Future<UserCredential> retypePassword(BuildContext context, String password) async {
+    final systemController = Provider.of<SystemController>(context, listen: false);
 
     try {
       systemController.showLoading();
@@ -301,8 +284,7 @@ class AuthController extends ChangeNotifier {
   }
 
   Future<void> changePassword(BuildContext context, String password) async {
-    final systemController =
-        Provider.of<SystemController>(context, listen: false);
+    final systemController = Provider.of<SystemController>(context, listen: false);
 
     try {
       systemController.showLoading();
