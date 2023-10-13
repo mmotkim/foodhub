@@ -47,6 +47,8 @@ Future<void> main() async {
   await PrefsProvider.load();
 
   //Notification
+  NotificationController.load();
+
   NotificationController.foregroundListen(_messageStreamController); // foreground
   FirebaseMessaging.onBackgroundMessage(NotificationController.backgroundHandler); //background
   // final RemoteMessage? message = await FirebaseMessaging.instance.getInitialMessage();
@@ -87,23 +89,23 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _lastMessage = "";
+  // String _lastMessage = "";
 
-  _MyAppState() {
-    //receiving foreground message, for UI changes
-    _messageStreamController.listen((message) {
-      setState(() {
-        if (message.notification != null) {
-          _lastMessage = 'Received a notification message:'
-              '\nTitle=${message.notification?.title},'
-              '\nBody=${message.notification?.body},'
-              '\nData=${message.data}';
-        } else {
-          _lastMessage = 'Received a data message: ${message.data}';
-        }
-      });
-    });
-  }
+  // _MyAppState() {
+  //   //receiving foreground message, for UI changes
+  //   _messageStreamController.listen((message) {
+  //     setState(() {
+  //       if (message.notification != null) {
+  //         _lastMessage = 'Received a notification message:'
+  //             '\nTitle=${message.notification?.title},'
+  //             '\nBody=${message.notification?.body},'
+  //             '\nData=${message.data}';
+  //       } else {
+  //         _lastMessage = 'Received a data message: ${message.data}';
+  //       }
+  //     });
+  //   });
+  // }
 
   Future<void> backgroundHandler() async {
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage(); //terminated
