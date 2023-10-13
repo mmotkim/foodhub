@@ -14,7 +14,7 @@ class BigField extends StatefulWidget {
   final TextInputType textInputType;
   final String? label;
   final String formName;
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final Map<String, String Function(Object)>? validationMessages;
   final Function? onChanged;
   final double? padding;
@@ -26,7 +26,7 @@ class BigField extends StatefulWidget {
     this.textInputType = TextInputType.text,
     this.label,
     required this.formName,
-    required this.controller,
+    this.controller,
     this.validationMessages,
     this.onChanged,
     this.padding,
@@ -238,9 +238,7 @@ class _BigFieldState extends State<BigField> {
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
         borderSide: BorderSide(
-          color: errorMessage != ''
-              ? const Color(0xFFFF0000)
-              : Colors.grey.shade200,
+          color: errorMessage != '' ? const Color(0xFFFF0000) : Colors.grey.shade200,
           width: 1.5,
         ),
       ),

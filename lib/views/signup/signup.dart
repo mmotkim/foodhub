@@ -13,6 +13,8 @@ import 'package:foodhub/components/secondary_button.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/styles/animated_routes.dart';
+import 'package:foodhub/styles/custom_colors.dart';
+import 'package:foodhub/utils/authSwitcher.dart';
 import 'package:foodhub/utils/form_utils.dart';
 import 'package:foodhub/system/system_controller.dart';
 import 'package:foodhub/views/home_screen/home_screen.dart';
@@ -55,7 +57,7 @@ import 'sign_up_form.dart';
 
 //dedicated router X
 //recheck command for localization X -> add script for when building apk
-//optional: get context locale without context X 
+//optional: get context locale without context X
 //fix google flow X
 //user session X
 //auto redirect on email_sent screen X
@@ -67,19 +69,21 @@ import 'sign_up_form.dart';
 //Add timeout for resend email X
 //fix sign up with phone Xz
 //block custom authed user from changing password X
-//email verification ? -> REQUIRED after sign up with email/pass X (Added on after sign in + sign up with email/pass, splash screen)
+//email verification ? -> REQUIRED after sign up with email/pass X (Added on after sign in + sign up with email/pass, splash screen) X
 
 //push notifications using firebase cloud messaging, 3 states
 //sent localization msg without context X
 
-//ask for push notificiation permission 
-//FCM token for backend 
-//don't just dispose fields when error 
-//listen for email verification state on email sent screen 
-//main menu design: remember state on changing drawers 
+//ask for push notificiation permission X foreground msg UI X ask for perm print
+//icon for notification X
+//FCM token for backend X
+//don't just dispose fields when error X
+//listen for email verification state on email sent screen X
+//main menu design: remember state on changing drawers
 
 //flutter_secure_storage X
 //prevent swiping back on home screen
+//email_sent screen navigation bug X
 
 @RoutePage()
 class SignUpScreen extends StatelessWidget {
@@ -126,7 +130,7 @@ class SignUpScreen extends StatelessWidget {
         ),
       ),
 
-      const SizedBox(height: 20.0), 
+      const SizedBox(height: 20.0),
       // Spacing
       // Sign in with Text and Vertical Lines
       // HorizontalSeparator.dark(text: 'signUpWith'.tr()),
@@ -150,7 +154,22 @@ class SignUpScreen extends StatelessWidget {
       const SizedBox(height: 15),
       _continueWithPhone(context),
       const SizedBox(height: 28),
-      _localeSwitcher(context)
+      _localeSwitcher(context),
+      Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 22),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Use Firebase Authentication',
+                style: CustomTextStyle.labelMedium(context),
+              ),
+              const AuthSwitcher(),
+            ],
+          ),
+        ),
+      ),
     ];
   }
 
@@ -168,7 +187,7 @@ class SignUpScreen extends StatelessWidget {
           onPressed: () {
             context.setLocale(const Locale('vi', 'VN'));
           },
-          child: const Text('twat'),
+          child: const Text('Vietnamese'),
         )
       ],
     );
@@ -218,9 +237,7 @@ class SignUpScreen extends StatelessWidget {
 
   Center errorMessage(BuildContext context) {
     return Center(
-      child: Text(context.watch<AuthController>().errorMessage ?? '',
-          style: CustomTextStyle.errorText(context)),
+      child: Text(context.watch<AuthController>().errorMessage ?? '', style: CustomTextStyle.errorText(context)),
     );
   }
 }
-

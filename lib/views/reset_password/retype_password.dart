@@ -1,10 +1,8 @@
-import 'dart:ffi';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/components/big_field.dart';
 import 'package:foodhub/components/form_submit_button.dart';
@@ -68,7 +66,7 @@ class _RetypePasswordScreenState extends State<RetypePasswordScreen> {
               },
             );
       } on FirebaseAuthException catch (e) {
-        print('retype password: $e');
+        debugPrint('retype password: $e');
       } catch (_) {
         systemController.dismiss();
         rethrow;

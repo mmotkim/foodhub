@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:auto_route/auto_route.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:foodhub/auth/controllers/api_auth_controller.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/utils/app_state.dart';
@@ -23,6 +23,11 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     _init();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -63,31 +68,50 @@ class _SplashScreenState extends State<SplashScreen> {
     String email = '';
 
     try {
-      appState.init();
-      Future.delayed(
-          const Duration(seconds: 2),
-          () => {
-                if (appState.loggedIn)
-                  {
-                    if (appState.needMailVerify)
-                      {
-                        email = Provider.of<AuthController>(context, listen: false).getCurrentUser()!.email!,
-                        context.router.replaceAll([
-                          WelcomeRoute(),
-                          LoginRoute(),
-                          EmailSentRoute2(email: email, isLoggedIn: true),
-                        ])
-                      }
-                    else
-                      {
-                        context.router.replace(HomeRoute()),
-                      }
-                  }
-                else
-                  {context.router.replace(WelcomeRoute())}
-              });
+      appState.init().then((value) {
+        Future.delayed(
+            const Duration(seconds: 2),
+            () => {
+                  if (appState.loggedIn)
+                    {
+                      if (appState.useFirebaseAuth)
+                        {
+                          if (appState.needMailVerify)
+                            {
+                              email = Provider.of<AuthController>(context, listen: false).getCurrentUser()!.email!,
+                              _pushToEmailSent(email),
+                            }
+                          else //Firebase + email verified
+                            {
+                              context.router.replace(HomeRoute()),
+                            }
+                        }
+                      else
+                        {
+                          //USING API AUTH
+                          if (appState.needMailVerify)
+                            {
+                              email = Provider.of<ApiAuthController>(context, listen: false).getUserData()!.email,
+                              _pushToEmailSent(email),
+                            }
+                          else //API + email verified
+                            {context.router.replace(HomeRoute())}
+                        }
+                    }
+                  else // NOT LOGGED IN
+                    {context.router.replace(WelcomeRoute())}
+                });
+      });
     } catch (_) {
       print(_);
     }
+  }
+
+  Future<void> _pushToEmailSent(String email) async {
+    await context.router.replaceAll([
+      WelcomeRoute(),
+      LoginRoute(),
+      EmailSentRoute2(email: email, isLoggedIn: true),
+    ]);
   }
 }

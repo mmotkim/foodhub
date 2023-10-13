@@ -1,17 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:async';
-import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:foodhub/api/custom_interceptor.dart';
-import 'package:foodhub/api/rest_client.dart';
-import 'package:foodhub/auth/controllers/api_auth_controller.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
-import 'package:foodhub/database/prefs_provider.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/system/system_controller.dart';
@@ -34,6 +28,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   void initState() {
     super.initState();
+    // NotificationController.terminatedhandler(context);
   }
 
   Future<void> _onGoogle() async {
@@ -47,7 +42,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           });
     } catch (_) {
       systemController.showError('Something went wrong');
-      print('mother fucker!$_');
+      debugPrint('mother fucker!$_');
     } finally {}
   }
 

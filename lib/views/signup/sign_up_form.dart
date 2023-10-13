@@ -6,13 +6,16 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:foodhub/auth/controllers/api_auth_controller.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
 import 'package:foodhub/auth/controllers/error_controller.dart';
 import 'package:foodhub/components/primary_button.dart';
 import 'package:foodhub/components/secondary_button.dart';
+import 'package:foodhub/database/prefs_provider.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/styles/animated_routes.dart';
+import 'package:foodhub/utils/app_state.dart';
 import 'package:foodhub/utils/form_utils.dart';
 import 'package:foodhub/system/system_controller.dart';
 import 'package:foodhub/views/home_screen/home_screen.dart';
@@ -40,10 +43,6 @@ class SignUpForm extends StatefulWidget {
 }
 
 class _SignUpFormState extends State<SignUpForm> {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final nameController = TextEditingController();
-
   @override
   void initState() {
     super.initState();
@@ -66,17 +65,34 @@ class _SignUpFormState extends State<SignUpForm> {
   });
 
   void _handleSignUp() async {
+    if (form.valid) {
+      final name = form.control('name').value;
+      final email = form.control('email').value;
+      final password = form.control('password').value;
+
+      context.read<ApplicationState>().useFirebaseAuth
+          ? await _firebaseSignUp(name, email, password)
+          : await _apiSignUp(name, email, password);
+    }
+  }
+
+  Future<void> _apiSignUp(String name, String email, String password) async {
+    final systemController = Provider.of<SystemController>(context, listen: false);
+    systemController.showLoading();
+
+    ApiAuthController apiController = ApiAuthController();
+    await apiController.signUpWithEmail(context, email, email, password).then((value) async {
+      context.router.push(const HomeRoute());
+      systemController.showSuccess(LocaleKeys.done);
+    });
+  }
+
+  Future<void> _firebaseSignUp(String name, String email, String password) async {
     final authProvider = Provider.of<AuthController>(context, listen: false);
     final systemController = Provider.of<SystemController>(context, listen: false);
 
     if (form.valid) {
       try {
-        //get input
-        final email = emailController.text.trim();
-        final password = passwordController.text.trim();
-        final name = nameController.text.trim();
-        print(email);
-
         //await firebase signup
         final result = await authProvider.signUp(context, email, password, name);
         print(result.user?.email);
@@ -92,12 +108,7 @@ class _SignUpFormState extends State<SignUpForm> {
         authProvider.clearErrorMessage();
       } on FirebaseAuthException catch (err) {
         systemController.handleFirebaseEx(err.code);
-      } finally {
-        form.controls.forEach((key, value) {
-          value.updateValue('');
-          value.markAsUntouched();
-        });
-      }
+      } finally {}
     } else {
       print('form is shit');
 
@@ -120,14 +131,12 @@ class _SignUpFormState extends State<SignUpForm> {
             textInputType: TextInputType.text,
             label: 'fullName'.tr(),
             formName: 'name',
-            controller: nameController,
             validationMessages: InputValidation.nameMap,
           ),
           const SizedBox(height: 18.0), // Spacing
           // Email Field
           BigField.email(
             formName: 'email',
-            controller: emailController,
             label: 'email'.tr(),
           ),
           // Password Field
@@ -135,15 +144,18 @@ class _SignUpFormState extends State<SignUpForm> {
           BigField.password(
             hintText: 'passGuide'.tr(),
             formName: 'password',
-            controller: passwordController,
             label: 'pass'.tr(),
           ), // Sign-Up Button
           const SizedBox(height: 33.0), // Spacing
 
           Center(
-            child: FormSubmitButton(
-              text: 'signUp'.tr().toUpperCase(),
-              onPressed: _handleSignUp,
+            child: ReactiveFormConsumer(
+              builder: (context, formGroup, child) {
+                return FormSubmitButton(
+                  text: 'signUp'.tr().toUpperCase(),
+                  onPressed: _handleSignUp,
+                );
+              },
             ),
           ),
         ],

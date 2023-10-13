@@ -16,8 +16,7 @@ class EmailVerificationController {
 
   Future<void> requestResetPassword(BuildContext context, String email) async {
     final authController = Provider.of<AuthController>(context, listen: false);
-    final systemController =
-        Provider.of<SystemController>(context, listen: false);
+    final systemController = Provider.of<SystemController>(context, listen: false);
 
     try {
       systemController.showLoading();
@@ -71,9 +70,9 @@ class EmailVerificationController {
   }
 
   bool verifyCode(BuildContext context, String userInput) {
-    String? _code = Provider.of<AuthController>(context, listen: false).code;
-    if (_code != null) {
-      return userInput == _code ? true : false;
+    String? code = Provider.of<AuthController>(context, listen: false).code;
+    if (code != null) {
+      return userInput == code ? true : false;
     } else {
       print('no code found');
       return false;

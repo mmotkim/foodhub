@@ -1,6 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:foodhub/database/prefs_provider.dart';
+import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:rxdart/rxdart.dart';
 
 class NotificationController {
@@ -52,5 +55,31 @@ class NotificationController {
     debugPrint('Message data: ${message.data}');
     debugPrint('Message notification: ${message.notification?.title}');
     debugPrint('Message notification body: ${message.notification?.body}');
+  }
+
+  // Future<void> terminatedHandler() async {
+  //   print('terminated message:');
+  //   await PrefsProvider.printCustom('terminated2');
+
+  //   RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage(); //terminated
+  //   if (initialMessage != null) {
+  //     await PrefsProvider.saveCustom('terminated2', initialMessage.notification.toString());
+  //     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+  //     //   context.router
+  //     //       .push(EmailSentRoute2(email: 'pushed from bg msg ${initialMessage.toString()}', isLoggedIn: false));
+  //     // });
+  //   }
+  // }
+
+  static Future<void> terminatedhandler(BuildContext context) async {
+    final terminatedMesssage = await PrefsProvider.getCustom('terminated2');
+    if (terminatedMesssage != null) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        context.router.replaceAll([
+          const LoginRoute(),
+          EmailSentRoute2(email: 'terminated message: $terminatedMesssage', isLoggedIn: false),
+        ]);
+      });
+    }
   }
 }

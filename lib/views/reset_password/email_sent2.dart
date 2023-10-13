@@ -26,12 +26,18 @@ class EmailSentScreen2 extends StatefulWidget {
 class _EmailSentScreen2State extends State<EmailSentScreen2> with WidgetsBindingObserver {
   int _secondsRemaining = 60;
 
-  Timer? _timer;
+  Timer? _resendTimer;
+  Timer? _verifyCheckTimer;
+  late AuthController _authController;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _startTimer();
+    _authController = Provider.of<AuthController>(context, listen: false);
+
+    _startResend();
+    widget.isLoggedIn ? _startVerifyTimer() : null;
   }
 
   @override
@@ -39,21 +45,28 @@ class _EmailSentScreen2State extends State<EmailSentScreen2> with WidgetsBinding
     super.didChangeAppLifecycleState(state);
 
     if (state == AppLifecycleState.resumed) {
-      context.router.popUntilRouteWithName(LoginRoute.name);
+      _checkVerified(_verifyCheckTimer!);
     }
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _resendTimer?.cancel();
+    _verifyCheckTimer?.cancel();
     super.dispose();
   }
 
-  void _startTimer() {
-    _timer?.cancel();
+  void _startVerifyTimer() {
+    _verifyCheckTimer?.cancel();
+    _verifyCheckTimer = Timer.periodic(const Duration(seconds: 3), (timer) => _checkVerified(timer));
+  }
+
+  void _startResend() {
+    _resendTimer?.cancel();
     _secondsRemaining = 5;
 
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _resendTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_secondsRemaining == 0) {
         timer.cancel();
       } else {
@@ -64,8 +77,17 @@ class _EmailSentScreen2State extends State<EmailSentScreen2> with WidgetsBinding
     });
   }
 
+  void _checkVerified(Timer timer) {
+    _authController.getCurrentUser()!.reload();
+    print('Email verified: ${_authController.getCurrentUser()!.emailVerified}');
+    if (_authController.getCurrentUser()!.emailVerified) {
+      timer.cancel();
+      context.router.replaceAll([const HomeRoute()]);
+    }
+  }
+
   void resend(BuildContext context) async {
-    _startTimer();
+    _startResend();
     final authProvider = Provider.of<AuthController>(context, listen: false);
     widget.isLoggedIn
         ? await authProvider.sendEmailVerification(context)

@@ -1,9 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foodhub/auth/controllers/api_auth_controller.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
+import 'package:foodhub/models/user_entity.dart';
 import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/styles/custom_texts.dart';
 import 'package:foodhub/system/system_controller.dart';
+import 'package:foodhub/utils/app_state.dart';
 import 'package:provider/provider.dart';
 
 @RoutePage()
@@ -15,21 +18,28 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late bool _useFirebaseAuth;
   late Future<String?> _provider;
   String provider = '';
 
   @override
   void initState() {
     super.initState();
-    final authController = Provider.of<AuthController>(context, listen: false);
-    _provider = authController.getProviderName();
+
+    _useFirebaseAuth = context.read<ApplicationState>().useFirebaseAuth;
+    _useFirebaseAuth
+        ? {_provider = Provider.of<AuthController>(context, listen: false).getProviderName()}
+        : {_provider = getApiProvider()};
+  }
+
+  Future<String> getApiProvider() async {
+    return 'API anh thành';
   }
 
   @override
   Widget build(BuildContext context) {
     //await context.read<AuthController>().getProviderName()
-    final systemController =
-        Provider.of<SystemController>(context, listen: false);
+    final systemController = Provider.of<SystemController>(context, listen: false);
 
     Size size = MediaQuery.of(context).size;
 
@@ -76,15 +86,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _homeContent(BuildContext context) {
-    AuthController authController =
-        Provider.of<AuthController>(context, listen: false);
+    AuthController authController = Provider.of<AuthController>(context, listen: false);
+    final userData = context.read<ApiAuthController>().getUserData();
     return <Widget>[
       const SizedBox(height: 400),
       Text(
         'Logged in as $provider',
         style: CustomTextStyle.labellarge(context),
       ),
-      const UserInfo(),
+      _useFirebaseAuth ? const UserInfo() : ApiUserInfo(userEntity: userData!),
       const SizedBox(height: 30),
       if (provider == 'Email/Password') _resetPasswordButton(context),
       TextButton(
@@ -92,8 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
           authController.signOut();
           context.router.replace(const WelcomeRoute());
         },
-        child: Text('Sign the fuck out',
-            style: CustomTextStyle.labellarge(context)),
+        child: Text('Sign the fuck out', style: CustomTextStyle.labellarge(context)),
       ),
       const SizedBox(height: 30),
       const TextField(),
@@ -105,8 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onPressed: () {
         context.router.push(const RetypePasswordRoute());
       },
-      child:
-          Text('Change password', style: CustomTextStyle.labellarge(context)),
+      child: Text('Change password', style: CustomTextStyle.labellarge(context)),
     );
   }
 }
@@ -124,6 +132,24 @@ class UserInfo extends StatelessWidget {
       'mailVerified ${context.watch<AuthController>().getCurrentUser()?.emailVerified}\n'
       'uid ${context.watch<AuthController>().getCurrentUser()?.uid}\n',
       key: const Key('counterState'),
+      style: CustomTextStyle.labellarge(context),
+    );
+  }
+}
+
+class ApiUserInfo extends StatelessWidget {
+  const ApiUserInfo({super.key, required this.userEntity});
+  final UserEntity userEntity;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      /// Calls `context.watch` to make [Count] rebuild when [Counter] changes.
+      'name ${userEntity.userName}\n'
+      'email ${userEntity.email}\n'
+      'phone ${userEntity.phoneNumber}\n'
+      'mailVerified ${userEntity.isVerifiedEmail}\n'
+      'uid ${userEntity.id}\n',
       style: CustomTextStyle.labellarge(context),
     );
   }

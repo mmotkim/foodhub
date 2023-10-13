@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider, PhoneAuthProvider;
 // import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:foodhub/auth/controllers/api_auth_controller.dart';
+import 'package:foodhub/database/prefs_provider.dart';
+import 'package:logger/logger.dart';
 
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {
@@ -10,6 +13,7 @@ class ApplicationState extends ChangeNotifier {
   bool _needMailVerify = false;
   bool get loggedIn => _loggedIn;
   bool get needMailVerify => _needMailVerify;
+  bool useFirebaseAuth = false;
 
   // Set functions for loggedIn and needMailVerify
   set setLoggedIn(bool value) {
@@ -22,28 +26,50 @@ class ApplicationState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void switchAuth(bool value) {
+    useFirebaseAuth = value;
+    print('useFirebaseAuth: $value');
+    notifyListeners();
+  }
+
+  Future<bool> _useFirebase() async {
+    if (await PrefsProvider.getToken() != null) {
+      switchAuth(false);
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   Future<void> init() async {
     //ALSO CHECK IF EMAIL VERIFIED
     // FirebaseUIAuth.configureProviders([
     //   EmailAuthProvider(),
     // ]);
-
-    FirebaseAuth.instance.userChanges().listen((user) async {
-      if (user != null) {
-        _loggedIn = true;
-        debugPrint('LOGGED IN GOT DAMMIT');
-        final _providerName = await getProviderName(user);
-        if (!user.emailVerified && _providerName == 'Email/Password') {
-          print('$_providerName provider name in init');
-          _needMailVerify = true;
-          debugPrint('EMAIL NEED VERIFICATION GOT DAMMIT');
-        }
-      } else {
-        _loggedIn = false;
-        debugPrint('NOT LOGGED IN');
-      }
-      notifyListeners();
-    });
+    await _useFirebase()
+        ? FirebaseAuth.instance.authStateChanges().listen((user) async {
+            if (user != null) {
+              _loggedIn = true;
+              switchAuth(true);
+              debugPrint('LOGGED IN GOT DAMMIT');
+              final providerName = await getProviderName(user);
+              if (!user.emailVerified && providerName == 'Email/Password') {
+                print('$providerName provider name in init');
+                _needMailVerify = true;
+                debugPrint('EMAIL NEED VERIFICATION GOT DAMMIT');
+              }
+            } else {
+              _loggedIn = false;
+              debugPrint('NOT LOGGED IN');
+            }
+          })
+        : await ApiAuthController().getProfile().then((value) {
+            setLoggedIn = true;
+            Logger().i('API LOGGED IN');
+            setNeedMailVerify = !value.isVerifiedEmail;
+            Logger().i('Need mail verify?: $needMailVerify');
+            notifyListeners();
+          });
   }
 
   Future<String?> getProviderName(user) async {

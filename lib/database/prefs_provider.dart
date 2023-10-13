@@ -1,7 +1,5 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,6 +19,18 @@ class PrefsProvider {
           encryptedSharedPreferences: true,
         );
     _storage = FlutterSecureStorage(aOptions: _getAndroidOptions());
+  }
+
+  static Future<void> saveCustom(String key, String value) async {
+    await _prefs.setString(key, value);
+  }
+
+  static Future<void> printCustom(String key) async {
+    print(_prefs.getString(key));
+  }
+
+  static Future<String?> getCustom(String key) async {
+    return _prefs.getString(key);
   }
 
   static Future<void> saveToken(String token) async {
@@ -73,10 +83,10 @@ class PrefsProvider {
   }
 
   static Future<Locale?> getLocale() async {
-    final locale = await _prefs.getString('locale');
+    final locale = _prefs.getString('locale');
     if (locale != null) {
       final string = locale.split('_');
-      if (string[1] != null) {
+      if (string[1].isEmpty) {
         return Locale(string[0], string[1]);
       } else {
         return Locale(string[0]);

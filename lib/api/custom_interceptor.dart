@@ -16,6 +16,11 @@ class CustomInterceptor extends Interceptor {
       _logger.t('token intercepted: $token');
     }
 
+    if (uri.path.contains('refresh-token')) {
+      final refreshToken = await PrefsProvider.getRefreshToken();
+      options.data = {'refresh-token': refreshToken};
+    }
+
     _logger.i('REQUEST[${options.method}] => PATH: ${options.path}');
 
     super.onRequest(options, handler);

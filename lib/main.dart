@@ -19,7 +19,6 @@ import 'package:foodhub/utils/load_image.dart';
 import 'package:foodhub/system/system_controller.dart';
 import 'package:foodhub/views/loading_screen/loading_screen.dart';
 import 'package:foodhub/views/login/login.dart';
-import 'package:foodhub/views/main_menu.dart';
 import 'package:foodhub/views/signup/signup.dart';
 import 'package:foodhub/views/splash.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -51,6 +50,7 @@ Future<void> main() async {
 
   NotificationController.foregroundListen(_messageStreamController); // foreground
   FirebaseMessaging.onBackgroundMessage(NotificationController.backgroundHandler); //background
+  // NotificationController().terminatedHandler();
   // final RemoteMessage? message = await FirebaseMessaging.instance.getInitialMessage();
 
   //preload images
@@ -71,9 +71,7 @@ Future<void> main() async {
           ChangeNotifierProvider(create: (context) => ErrorController()),
           ChangeNotifierProvider(create: (context) => SystemController()),
           ChangeNotifierProvider(create: (context) => ApplicationState()),
-          ChangeNotifierProvider(
-            create: (context) => ApiAuthController(),
-          )
+          ChangeNotifierProvider(create: (context) => ApiAuthController())
         ],
         child: const MyApp(),
       ),
@@ -108,21 +106,23 @@ class _MyAppState extends State<MyApp> {
   // }
 
   Future<void> backgroundHandler() async {
+    print('terminated message:');
+    await PrefsProvider.printCustom('terminated2');
+
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage(); //terminated
     if (initialMessage != null) {
-      print('terminated msg received!');
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        context.router
-            .push(EmailSentRoute2(email: 'pushed from bg msg ${initialMessage.toString()}', isLoggedIn: false));
-      });
+      await PrefsProvider.saveCustom('terminated2', initialMessage.data.toString());
+      // WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      //   Future.delayed(const Duration(seconds: 5), () async {
+      //     await context.router.push(const LoginRoute());
+      //   });
+      // });
     }
   }
 
   @override
   void initState() {
     super.initState();
-    debugPrint('alreadyAccount'.tr());
-
     backgroundHandler();
   }
 
