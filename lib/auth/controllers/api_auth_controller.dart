@@ -1,4 +1,4 @@
-// ignore_for_file: body_might_complete_normally_catch_error
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
@@ -8,6 +8,7 @@ import 'package:foodhub/database/prefs_provider.dart';
 import 'package:foodhub/models/token_entity.dart';
 import 'package:foodhub/models/token_response_entity.dart';
 import 'package:foodhub/models/user_entity.dart';
+import 'package:foodhub/models/user_response_entity.dart';
 import 'package:foodhub/system/system_controller.dart';
 import 'package:foodhub/utils/app_state.dart';
 import 'package:logger/logger.dart';
@@ -22,15 +23,12 @@ class ApiAuthController extends ChangeNotifier {
   Future<TokenEntity> signUpWithEmail(BuildContext context, String userName, String email, String password) async {
     final client = RestClient(_dio);
     final userSignUp = {"userName": userName, "email": email, "password": password};
-    final userResponseEntity = await client.apiSignUp(userSignUp).catchError(
-      (obj) {
-        if (obj.runtimeType == DioException) {
-          final res = (obj as DioException).response;
-          _logger.e('Dio Your Ex: ${res?.statusCode} -> ${res?.statusMessage}');
-          _sys.dismiss();
-        }
-      },
-    );
+    late final UserResponseEntity userResponseEntity;
+    try {
+      userResponseEntity = await client.apiSignUp(userSignUp);
+    } on DioException catch (e) {
+      rethrow;
+    }
 
     final userEntity = userResponseEntity.results;
 
@@ -46,18 +44,12 @@ class ApiAuthController extends ChangeNotifier {
     final appState = Provider.of<ApplicationState>(context, listen: false);
 
     final userData = {'email': email, 'password': password};
-
-    final userResponseEntity = await client.apiSignIn(userData).catchError(
-      (obj) {
-        if (obj.runtimeType == DioException) {
-          final res = (obj as DioException).response;
-          _logger.e('Dio Your Ex: ${res?.statusCode} -> ${res?.statusMessage}');
-        } else {
-          throw Exception(obj.toString());
-        }
-      },
-    );
-
+    late final UserResponseEntity userResponseEntity;
+    try {
+      userResponseEntity = await client.apiSignIn(userData);
+    } on DioException catch (e) {
+      rethrow;
+    }
     final userEntity = userResponseEntity.results;
 
     final token = userEntity.token;
@@ -81,12 +73,17 @@ class ApiAuthController extends ChangeNotifier {
 
   void setUserData(UserEntity dataUser) {
     _userData = dataUser;
-    print(_userData?.email);
+    debugPrint(_userData?.email);
     notifyListeners();
   }
 
   UserEntity? getUserData() {
     return _userData;
+  }
+
+  Future<void> signOut() async {
+    await PrefsProvider.deleteAll();
+    notifyListeners();
   }
 
   Future<UserEntity> getProfile() async {
@@ -95,8 +92,10 @@ class ApiAuthController extends ChangeNotifier {
 
     if (userId != null) {
       final userResponseEntity = await client.apiGetProfile(userId);
-      setUserData(userResponseEntity.results);
-      print(_userData?.id);
+      final userEntity = userResponseEntity.results;
+      setUserData(userEntity);
+      await PrefsProvider.saveTokens(userEntity.token, userEntity.refreshToken);
+      debugPrint(_userData?.id);
       return userResponseEntity.results;
     } else {
       Logger().e('userID not found in local storage');

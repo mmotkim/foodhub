@@ -21,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late bool _useFirebaseAuth;
   late Future<String?> _provider;
   String provider = '';
+  UserEntity? userData;
 
   @override
   void initState() {
@@ -29,7 +30,10 @@ class _HomeScreenState extends State<HomeScreen> {
     _useFirebaseAuth = context.read<ApplicationState>().useFirebaseAuth;
     _useFirebaseAuth
         ? {_provider = Provider.of<AuthController>(context, listen: false).getProviderName()}
-        : {_provider = getApiProvider()};
+        : {
+            _provider = getApiProvider(),
+            userData = context.read<ApiAuthController>().getUserData(),
+          };
   }
 
   Future<String> getApiProvider() async {
@@ -86,8 +90,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _homeContent(BuildContext context) {
-    AuthController authController = Provider.of<AuthController>(context, listen: false);
-    final userData = context.read<ApiAuthController>().getUserData();
     return <Widget>[
       const SizedBox(height: 400),
       Text(
@@ -99,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (provider == 'Email/Password') _resetPasswordButton(context),
       TextButton(
         onPressed: () {
-          authController.signOut();
+          _signOut();
           context.router.replace(const WelcomeRoute());
         },
         child: Text('Sign the fuck out', style: CustomTextStyle.labellarge(context)),
@@ -116,6 +118,10 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: Text('Change password', style: CustomTextStyle.labellarge(context)),
     );
+  }
+
+  void _signOut() {
+    _useFirebaseAuth ? context.read<AuthController>().signOut() : context.read<ApiAuthController>().signOut();
   }
 }
 

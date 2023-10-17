@@ -3,7 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider, PhoneA
 import 'package:flutter/material.dart';
 import 'package:foodhub/auth/controllers/api_auth_controller.dart';
 import 'package:foodhub/database/prefs_provider.dart';
+import 'package:foodhub/models/user_entity.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {
@@ -11,9 +13,11 @@ class ApplicationState extends ChangeNotifier {
   }
   bool _loggedIn = false;
   bool _needMailVerify = false;
+  bool useFirebaseAuth = false;
+  UserEntity? userData;
+  String? errorMessage;
   bool get loggedIn => _loggedIn;
   bool get needMailVerify => _needMailVerify;
-  bool useFirebaseAuth = false;
 
   // Set functions for loggedIn and needMailVerify
   set setLoggedIn(bool value) {
@@ -32,16 +36,27 @@ class ApplicationState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setErrorMessage(String message) {
+    errorMessage = message;
+    notifyListeners();
+  }
+
+  void clearErrorMessage() {
+    errorMessage = null;
+    notifyListeners();
+  }
+
   Future<bool> _useFirebase() async {
     if (await PrefsProvider.getToken() != null) {
       switchAuth(false);
       return false;
     } else {
+      switchAuth(true);
       return true;
     }
   }
 
-  Future<void> init() async {
+  Future<void> init([BuildContext? context]) async {
     //ALSO CHECK IF EMAIL VERIFIED
     // FirebaseUIAuth.configureProviders([
     //   EmailAuthProvider(),
@@ -63,13 +78,28 @@ class ApplicationState extends ChangeNotifier {
               debugPrint('NOT LOGGED IN');
             }
           })
-        : await ApiAuthController().getProfile().then((value) {
-            setLoggedIn = true;
-            Logger().i('API LOGGED IN');
-            setNeedMailVerify = !value.isVerifiedEmail;
-            Logger().i('Need mail verify?: $needMailVerify');
-            notifyListeners();
-          });
+        : {
+            setLoggedIn = true,
+            Logger().i('API LOGGED IN'),
+            if (context != null)
+              {
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+                  await context.read<ApiAuthController>().getProfile().then((value) => {
+                        setNeedMailVerify = !value.isVerifiedEmail,
+                        Logger().i('Need mail verify?: $needMailVerify'),
+                        notifyListeners(),
+                      });
+                })
+              }
+          };
+    // : await  ApiAuthController().getProfile().then((value) {
+    //     setLoggedIn = true;
+    //     Logger().i('API LOGGED IN');
+    //     setNeedMailVerify = !value.isVerifiedEmail;
+    //     Logger().i('Need mail verify?: $needMailVerify');
+    //     userData = value;
+    //     notifyListeners();
+    //   });
   }
 
   Future<String?> getProviderName(user) async {

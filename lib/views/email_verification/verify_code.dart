@@ -2,21 +2,19 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:foodhub/auth/controllers/auth_controller.dart';
-import 'package:foodhub/auth/controllers/email_verification_controller.dart';
-import 'package:foodhub/components/bottom_help_text.dart';
 import 'package:foodhub/gen/assets.gen.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
-import 'package:foodhub/styles/custom_colors.dart';
 import 'package:foodhub/styles/custom_texts.dart';
+import 'package:foodhub/utils/app_state.dart';
 import 'package:provider/provider.dart';
-import 'package:reactive_forms/reactive_forms.dart';
-import 'package:reactive_pin_code_fields/reactive_pin_code_fields.dart';
+
+import 'codeInput_form.dart';
 
 @RoutePage()
-class EmailSentScreen extends StatelessWidget {
-  const EmailSentScreen({super.key});
+class VerifyCodeScreen extends StatelessWidget {
+  const VerifyCodeScreen({super.key, required this.email, required this.isLoggedIn});
+  final String email;
+  final bool isLoggedIn;
 
   @override
   Widget build(BuildContext context) {
@@ -60,100 +58,15 @@ class EmailSentScreen extends StatelessWidget {
       const SizedBox(height: 12),
       //body
       Text(
-        '${LocaleKeys.authVerificationBody.tr()} ',
+        '${LocaleKeys.authVerificationBody.tr()} $email',
         style: CustomTextStyle.bodySmall(context),
       ),
       const SizedBox(height: 16),
-      errorMessage(context),
-      const SizedBox(height: 15),
-      const CodeForm(),
-      const SizedBox(height: 32),
-      bottomHelpText(),
+
+      CodeInputForm(email: email, isLoggedIn: isLoggedIn),
+
       const SizedBox(height: 300),
     ];
-  }
-
-  Center bottomHelpText() {
-    return Center(
-      child: BottomHelpText.light(
-        text: '${LocaleKeys.authVerificationBottom.tr()} ',
-        actionText: LocaleKeys.authVerificationBottomAction.tr(),
-        onPressed: () {},
-        fontSize: 16.0,
-      ),
-    );
-  }
-
-  Center errorMessage(BuildContext context) {
-    return Center(
-      child: Text(
-        context.watch<AuthController>().errorMessage ?? '',
-        style: CustomTextStyle.errorText(context),
-      ),
-    );
-  }
-}
-
-class CodeForm extends StatefulWidget {
-  const CodeForm({
-    super.key,
-  });
-
-  @override
-  State<CodeForm> createState() => _CodeFormState();
-}
-
-class _CodeFormState extends State<CodeForm> {
-  @override
-  Widget build(BuildContext context) {
-    final form = FormGroup({
-      'pin': FormControl<int>(),
-    });
-
-    return ReactiveForm(
-      formGroup: form,
-      child: ReactivePinCodeTextField<int>(
-        length: 4,
-        formControlName: 'pin',
-        keyboardType: TextInputType.number,
-        textStyle: CustomTextStyle.pinCode,
-        cursorWidth: 1.50,
-        cursorHeight: 22,
-        cursorColor: CustomColors.cursor,
-        enableActiveFill: true,
-        pinTheme: PinTheme(
-          activeFillColor: Colors.white,
-          inactiveFillColor: Colors.white,
-          selectedFillColor: Colors.white,
-          shape: PinCodeFieldShape.box,
-          borderRadius: BorderRadius.circular(12),
-          fieldHeight: 65,
-          fieldWidth: 65,
-          borderWidth: 1,
-          activeColor: CustomColors.fieldBorder,
-          selectedColor: CustomColors.primary,
-          inactiveColor: CustomColors.fieldBorder,
-        ),
-        boxShadows: [CustomColors.pinFieldShadow],
-        animationType: AnimationType.scale,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        onCompleted: (code) => _handleSubmit(code),
-        onSubmitted: (code) => _handleSubmit(code),
-      ),
-    );
-  }
-
-  _handleSubmit(String code) async {
-    try {
-      if (EmailVerificationController().verifyCode(context, code)) {
-        EasyLoading.showSuccess('fuck yeah');
-      } else {
-        EasyLoading.showError('fuck');
-      }
-    } catch (err) {
-      print('fuck. $err');
-      rethrow;
-    } finally {}
   }
 }
 

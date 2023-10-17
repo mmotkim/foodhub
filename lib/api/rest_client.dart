@@ -20,4 +20,10 @@ abstract class RestClient {
 
   @POST('/user/refresh-token')
   Future<TokenResponseEntity> apiResetToken();
+
+  @POST('/mail/send-verification-code')
+  Future<void> apiSendVerificationCode(@Body() Map<String, String> email);
+
+  @POST('/mail/verify-code')
+  Future<void> apiVerifyCode(@Body() Map<String, String> code);
 }

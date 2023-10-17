@@ -48,9 +48,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       // }
 
       final authProvider = Provider.of<AuthController>(context, listen: false);
-      await authProvider.sendPasswordResetEmail(context, emailValue).then(
-          (value) => context.router
-              .push(EmailSentRoute2(email: emailValue, isLoggedIn: false)));
+      await authProvider
+          .sendPasswordResetEmail(context, emailValue)
+          .then((value) => context.router.push(EmailSentFirebaseRoute(email: emailValue, isLoggedIn: false)));
       // Navigator.push(
       //     context,
       //     MaterialPageRoute(
@@ -83,9 +83,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             const SizedBox(height: 35),
             FormSubmitButton(
               text: LocaleKeys.resetPasswordAction.tr().toUpperCase(),
-              onPressed: () => widget.isLoggedIn
-                  ? onPressedLoggedIn(context)
-                  : onPressed(context),
+              onPressed: () => widget.isLoggedIn ? onPressedLoggedIn(context) : onPressed(context),
               textStyle: CustomTextStyle.altLabel,
             )
           ],

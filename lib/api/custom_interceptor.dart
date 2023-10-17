@@ -21,20 +21,20 @@ class CustomInterceptor extends Interceptor {
       options.data = {'refresh-token': refreshToken};
     }
 
-    _logger.i('REQUEST[${options.method}] => PATH: ${options.path}');
+    _logger.i('REQUEST[${options.method}] => ${options.data} => PATH: ${options.path}');
 
     super.onRequest(options, handler);
   }
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    _logger.i('RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
+    _logger.i('RESPONSE[${response.statusCode}] => ${response.data}  => PATH: ${response.requestOptions.path}');
     super.onResponse(response, handler);
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    _logger.e('ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}');
+    _logger.e('ERROR[${err.response?.statusCode}] => ${err.message}  => PATH: ${err.requestOptions.path}');
     super.onError(err, handler);
   }
 }

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/gen/assets.gen.dart';
 import 'package:foodhub/styles/custom_texts.dart';
+import 'package:foodhub/utils/authSwitcher.dart';
 import 'package:foodhub/views/login/login_form.dart';
 import '../../components/back_button.dart';
 
@@ -70,7 +71,27 @@ class LoginScreen extends StatelessWidget {
             SizedBox(height: 28),
           ],
         ),
-      )
+      ),
+      const SizedBox(height: 20),
+      _authSwitcher(context),
     ];
+  }
+
+  Center _authSwitcher(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 22),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Use Firebase Authentication',
+              style: CustomTextStyle.labelMedium(context),
+            ),
+            const AuthSwitcher(),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -12,14 +12,13 @@ class AppRouter extends $AppRouter {
         AutoRoute(page: VerificationRoute.page),
         AutoRoute(page: ResetPasswordRoute.page),
         AutoRoute(page: SignUpRoute.page),
-        AutoRoute(page: EmailSentRoute.page),
-        AutoRoute(page: EmailSentRoute2.page),
+        AutoRoute(page: EmailSentFirebaseRoute.page),
         AutoRoute(page: RetypePasswordRoute.page),
         AutoRoute(page: NewPasswordRoute.page),
+        AutoRoute(page: VerifyCodeRoute.page),
         CustomRoute(
           page: WelcomeRoute.page,
-          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-              FadeTransition(
+          transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(
             opacity: animation,
             child: child,
           ),

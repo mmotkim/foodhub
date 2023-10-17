@@ -14,6 +14,7 @@ import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/styles/animated_routes.dart';
 import 'package:foodhub/styles/custom_colors.dart';
+import 'package:foodhub/utils/app_state.dart';
 import 'package:foodhub/utils/authSwitcher.dart';
 import 'package:foodhub/utils/form_utils.dart';
 import 'package:foodhub/system/system_controller.dart';
@@ -84,6 +85,8 @@ import 'sign_up_form.dart';
 //flutter_secure_storage X
 //prevent swiping back on home screen
 //email_sent screen navigation bug X
+//email confirmation using code input X
+//email already exists case +
 
 @RoutePage()
 class SignUpScreen extends StatelessWidget {
@@ -235,9 +238,16 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  Center errorMessage(BuildContext context) {
-    return Center(
-      child: Text(context.watch<AuthController>().errorMessage ?? '', style: CustomTextStyle.errorText(context)),
+  Widget errorMessage(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 26.0),
+      child: Center(
+        child: Text(
+            context.read<ApplicationState>().useFirebaseAuth
+                ? context.watch<AuthController>().errorMessage ?? ''
+                : context.watch<ApplicationState>().errorMessage ?? '',
+            style: CustomTextStyle.errorText(context)),
+      ),
     );
   }
 }

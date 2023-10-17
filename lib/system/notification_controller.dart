@@ -66,7 +66,7 @@ class NotificationController {
   //     await PrefsProvider.saveCustom('terminated2', initialMessage.notification.toString());
   //     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
   //     //   context.router
-  //     //       .push(EmailSentRoute2(email: 'pushed from bg msg ${initialMessage.toString()}', isLoggedIn: false));
+  //     //       .push(EmailSentFirebaseRoute(email: 'pushed from bg msg ${initialMessage.toString()}', isLoggedIn: false));
   //     // });
   //   }
   // }
@@ -77,7 +77,7 @@ class NotificationController {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         context.router.replaceAll([
           const LoginRoute(),
-          EmailSentRoute2(email: 'terminated message: $terminatedMesssage', isLoggedIn: false),
+          EmailSentFirebaseRoute(email: 'terminated message: $terminatedMesssage', isLoggedIn: false),
         ]);
       });
     }

@@ -1,43 +1,32 @@
 import 'dart:async';
-import 'dart:convert';
 
-import 'package:auto_route/auto_route.dart';
+import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:foodhub/auth/controllers/auth_controller.dart';
-import 'package:foodhub/database/entity/verification_code.dart';
-import 'package:foodhub/routes/app_router.gr.dart';
+import 'package:foodhub/api/custom_interceptor.dart';
+import 'package:foodhub/api/rest_client.dart';
+import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/system/system_controller.dart';
+import 'package:foodhub/utils/app_state.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 
 class EmailVerificationController {
   // late Timer _timer;
+  final _logger = Logger();
+  final _dio = Dio()..interceptors.add(CustomInterceptor());
 
   Future<void> requestResetPassword(BuildContext context, String email) async {
-    final authController = Provider.of<AuthController>(context, listen: false);
     final systemController = Provider.of<SystemController>(context, listen: false);
+    final client = RestClient(_dio);
 
     try {
       systemController.showLoading();
-      context.router.push(const EmailSentRoute());
+      final body = {"email": email};
 
-      //checks if email belongs to account
-
-      VerificationCode code = authController.generateVerificationCode(4);
-      await mailApi(code);
-
-      // await authDAO.addVerificationCode(code, email);
-
-      // setTimerForAutoRedirect((Timer timer) {
-      //   authController.getCurrentUser()?.reload();
-      //   final user = authController.getCurrentUser();
-      //   if (user?.emailVerified ?? false) {
-      //     timer.cancel();
-      //     Navigator.push(
-      //         context, AnimatedRoutes.slideRight(const NewPasswordScreen()));
-      //   }
-      // });
+      await client.apiSendVerificationCode(body).then((value) {
+        systemController.showSuccess('Code sent.');
+      });
     } catch (ex) {
       print('fuck! $ex');
     } finally {
@@ -45,37 +34,59 @@ class EmailVerificationController {
     }
   }
 
-  Future<void> mailApi(VerificationCode verificationCode) async {
-    final baseUrl = dotenv.env['BASE_URL'];
-    final path = dotenv.env['sendApi'];
+  Future<void> requestEmailConfirmation(BuildContext context, String email) async {
+    final systemController = Provider.of<SystemController>(context, listen: false);
+    final client = RestClient(_dio);
 
-    final url = Uri.parse("$baseUrl$path");
+    try {
+      systemController.showLoading();
+      final body = {"email": email};
 
-    await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: json.encode({
-        'service_id': 'service_egv33mc',
-        'template_id': 'template_nsp7q0e',
-        'user_id': 'iPRCn4XM0G4pUFlph',
-        'accessToken': 'X-fjH37Pfwn1kTjY_rl_u',
-        'template_params': {
-          'code': verificationCode.code,
-        },
-      }),
-    );
-    print(verificationCode.code);
+      await client.apiSendVerificationCode(body).then((value) {
+        systemController.showSuccess('Code sent.');
+      }).catchError((obj) {
+        if (obj.runtimeType == DioException) {
+          final res = (obj as DioException).response;
+          _logger.e('Verify Code Api call error: ${res?.statusCode}');
+          if (res?.statusCode == 400) {
+            context.read<ApplicationState>().setErrorMessage(LocaleKeys.authVerificationError.tr());
+          }
+        }
+      });
+    } catch (ex) {
+      print('fuck! $ex');
+    } finally {
+      systemController.dismiss();
+    }
   }
 
-  bool verifyCode(BuildContext context, String userInput) {
-    String? code = Provider.of<AuthController>(context, listen: false).code;
-    if (code != null) {
-      return userInput == code ? true : false;
-    } else {
-      print('no code found');
-      return false;
+  // bool verifyCode(BuildContext context, String userInput) {
+  //   String? code = Provider.of<AuthController>(context, listen: false).code;
+  //   if (code != null) {
+  //     return userInput == code;
+  //   } else {
+  //     print('no code found');
+  //     return false;
+  //   }
+  // }
+
+  Future<void> verifyCode(BuildContext context, String userInput) async {
+    final client = RestClient(_dio);
+    try {
+      final code = {"code": userInput};
+      print(code);
+      await client.apiVerifyCode(code).then((value) {
+        _logger.i('Verification complete');
+      });
+    } catch (e) {
+      if (e.runtimeType == DioException) {
+        final res = (e as DioException).response;
+        _logger.e('Verify Code Api call error: ${res?.statusCode}');
+        if (res?.statusCode == 500) {
+          rethrow;
+        }
+      }
+      _logger.e('Error at apiVerifyCode call');
     }
   }
 

@@ -1,17 +1,16 @@
-import 'dart:math';
-
 import 'package:auto_route/auto_route.dart';
+import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:foodhub/auth/controllers/api_auth_controller.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
+import 'package:foodhub/auth/controllers/email_verification_controller.dart';
 import 'package:foodhub/components/big_field.dart';
 import 'package:foodhub/components/bottom_help_text.dart';
 import 'package:foodhub/components/form_submit_button.dart';
 import 'package:foodhub/components/horizontal_separator.dart';
 import 'package:foodhub/components/social_button.dart';
-import 'package:foodhub/database/prefs_provider.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/styles/custom_texts.dart';
@@ -35,6 +34,7 @@ class _LoginFormState extends State<LoginForm> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<AuthController>().clearErrorMessage();
+      context.read<ApplicationState>().clearErrorMessage();
     });
   }
 
@@ -63,13 +63,30 @@ class _LoginFormState extends State<LoginForm> {
 
   Future<void> _apiLogin(String email, String password) async {
     final systemController = Provider.of<SystemController>(context, listen: false);
-    systemController.showLoading();
-
-    ApiAuthController apiController = ApiAuthController();
-    await apiController.signIn(context, email, password).then((value) async {
-      context.router.push(const HomeRoute());
-      systemController.showSuccess(LocaleKeys.done);
-    });
+    final appState = context.read<ApplicationState>();
+    ApiAuthController apiController = context.read<ApiAuthController>();
+    try {
+      systemController.showLoading();
+      await apiController.signIn(context, email, password).then((value) async {
+        await apiController.getProfile().then((value) async {
+          if (value.isVerifiedEmail) {
+            context.router.push(const HomeRoute());
+          } else {
+            await EmailVerificationController().requestEmailConfirmation(context, email);
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              context.router.push(VerifyCodeRoute(email: email, isLoggedIn: true));
+            });
+          }
+        });
+        systemController.showSuccess(LocaleKeys.done);
+      });
+    } on DioException catch (e) {
+      appState.setErrorMessage(systemController.handleDioException(e));
+    } on ArgumentError catch (e) {
+      systemController.handleArgumentError(e);
+    } finally {
+      systemController.dismiss();
+    }
   }
 
   Future<void> _firebaseLogin(String email, String password) async {
@@ -83,12 +100,9 @@ class _LoginFormState extends State<LoginForm> {
         if (result.user!.emailVerified) {
           context.router.replaceAll([const HomeRoute()]);
         } else {
-          context.router.push(EmailSentRoute2(email: email, isLoggedIn: true));
+          context.router.push(EmailSentFirebaseRoute(email: email, isLoggedIn: true));
         }
       }
-
-      //clear message in case of return
-      authProvider.clearErrorMessage();
     } on FirebaseAuthException catch (e) {
       systemController.handleFirebaseEx(e.code);
     } finally {
@@ -153,7 +167,11 @@ class _LoginFormState extends State<LoginForm> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 26.0),
       child: Center(
-        child: Text(context.watch<AuthController>().errorMessage ?? '', style: CustomTextStyle.errorText(context)),
+        child: Text(
+            context.read<ApplicationState>().useFirebaseAuth
+                ? context.watch<AuthController>().errorMessage ?? ''
+                : context.watch<ApplicationState>().errorMessage ?? '',
+            style: CustomTextStyle.errorText(context)),
       ),
     );
   }

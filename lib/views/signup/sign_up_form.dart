@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:foodhub/auth/controllers/api_auth_controller.dart';
 import 'package:foodhub/auth/controllers/auth_controller.dart';
+import 'package:foodhub/auth/controllers/email_verification_controller.dart';
 import 'package:foodhub/auth/controllers/error_controller.dart';
 import 'package:foodhub/components/primary_button.dart';
 import 'package:foodhub/components/secondary_button.dart';
@@ -78,13 +79,22 @@ class _SignUpFormState extends State<SignUpForm> {
 
   Future<void> _apiSignUp(String name, String email, String password) async {
     final systemController = Provider.of<SystemController>(context, listen: false);
-    systemController.showLoading();
+    final appState = context.read<ApplicationState>();
 
-    ApiAuthController apiController = ApiAuthController();
-    await apiController.signUpWithEmail(context, email, email, password).then((value) async {
-      context.router.push(const HomeRoute());
-      systemController.showSuccess(LocaleKeys.done);
-    });
+    systemController.showLoading();
+    try {
+      ApiAuthController apiController = ApiAuthController();
+      await apiController.signUpWithEmail(context, name, email, password).then((value) async {
+        await EmailVerificationController().requestEmailConfirmation(context, email).then((value) {
+          context.router.push(VerifyCodeRoute(email: email, isLoggedIn: true));
+        });
+        systemController.showSuccess(LocaleKeys.done);
+      });
+    } on DioException catch (e) {
+      appState.setErrorMessage(systemController.handleDioException(e));
+    } finally {
+      systemController.dismiss();
+    }
   }
 
   Future<void> _firebaseSignUp(String name, String email, String password) async {
@@ -99,7 +109,7 @@ class _SignUpFormState extends State<SignUpForm> {
         if (result.user != null && mounted) {
           await authProvider.sendEmailVerification(context).then((value) => {
                 context.router.push(
-                  EmailSentRoute2(email: email, isLoggedIn: true),
+                  EmailSentFirebaseRoute(email: email, isLoggedIn: true),
                 )
               });
         }

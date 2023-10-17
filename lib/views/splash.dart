@@ -65,10 +65,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _init() async {
     final appState = Provider.of<ApplicationState>(context, listen: false);
+    context.read<AuthController>().signOut();
     String email = '';
 
     try {
-      appState.init().then((value) {
+      appState.init(context).then((value) {
         Future.delayed(
             const Duration(seconds: 2),
             () => {
@@ -89,10 +90,10 @@ class _SplashScreenState extends State<SplashScreen> {
                       else
                         {
                           //USING API AUTH
-                          if (appState.needMailVerify)
+                          if (appState.needMailVerify) // API + email not verified
                             {
                               email = Provider.of<ApiAuthController>(context, listen: false).getUserData()!.email,
-                              _pushToEmailSent(email),
+                              _pushToApiEmailSent(email),
                             }
                           else //API + email verified
                             {context.router.replace(HomeRoute())}
@@ -111,7 +112,15 @@ class _SplashScreenState extends State<SplashScreen> {
     await context.router.replaceAll([
       WelcomeRoute(),
       LoginRoute(),
-      EmailSentRoute2(email: email, isLoggedIn: true),
+      EmailSentFirebaseRoute(email: email, isLoggedIn: true),
+    ]);
+  }
+
+  Future<void> _pushToApiEmailSent(String email) async {
+    await context.router.replaceAll([
+      WelcomeRoute(),
+      LoginRoute(),
+      VerifyCodeRoute(email: email, isLoggedIn: true),
     ]);
   }
 }

@@ -14,16 +14,16 @@ import 'package:foodhub/styles/custom_texts.dart';
 import 'package:provider/provider.dart';
 
 @RoutePage()
-class EmailSentScreen2 extends StatefulWidget {
-  const EmailSentScreen2({super.key, required this.email, required this.isLoggedIn});
+class EmailSentFirebaseScreen extends StatefulWidget {
+  const EmailSentFirebaseScreen({super.key, required this.email, required this.isLoggedIn});
   final String email;
   final bool isLoggedIn;
 
   @override
-  State<EmailSentScreen2> createState() => _EmailSentScreen2State();
+  State<EmailSentFirebaseScreen> createState() => _EmailSentFirebaseScreenState();
 }
 
-class _EmailSentScreen2State extends State<EmailSentScreen2> with WidgetsBindingObserver {
+class _EmailSentFirebaseScreenState extends State<EmailSentFirebaseScreen> with WidgetsBindingObserver {
   int _secondsRemaining = 60;
 
   Timer? _resendTimer;
@@ -182,8 +182,12 @@ class _EmailSentScreen2State extends State<EmailSentScreen2> with WidgetsBinding
     // Navigator.of(context).popUntil((route) {
     //   return route.isFirst || route.settings.name == '/login';
     // });
+    _authController.signOut();
 
-    context.router.popUntilRouteWithName(LoginRoute.name);
+    context.router.replaceAll([
+      const WelcomeRoute(),
+      const LoginRoute(),
+    ]);
   }
 }
 
