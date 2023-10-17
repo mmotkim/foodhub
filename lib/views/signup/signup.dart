@@ -15,7 +15,7 @@ import 'package:foodhub/routes/app_router.gr.dart';
 import 'package:foodhub/styles/animated_routes.dart';
 import 'package:foodhub/styles/custom_colors.dart';
 import 'package:foodhub/utils/app_state.dart';
-import 'package:foodhub/utils/authSwitcher.dart';
+import 'package:foodhub/utils/auth_switcher.dart';
 import 'package:foodhub/utils/form_utils.dart';
 import 'package:foodhub/system/system_controller.dart';
 import 'package:foodhub/views/home_screen/home_screen.dart';
@@ -68,11 +68,11 @@ import 'sign_up_form.dart';
 //preload splash background X
 //existing routes in stack navigation X
 //Add timeout for resend email X
-//fix sign up with phone Xz
+//fix sign up with phone X
 //block custom authed user from changing password X
 //email verification ? -> REQUIRED after sign up with email/pass X (Added on after sign in + sign up with email/pass, splash screen) X
 
-//push notifications using firebase cloud messaging, 3 states
+//push notifications using firebase cloud messaging, 3 states X
 //sent localization msg without context X
 
 //ask for push notificiation permission X foreground msg UI X ask for perm print
@@ -83,10 +83,13 @@ import 'sign_up_form.dart';
 //main menu design: remember state on changing drawers
 
 //flutter_secure_storage X
-//prevent swiping back on home screen
+//prevent swiping back on home screen X
 //email_sent screen navigation bug X
 //email confirmation using code input X
-//email already exists case +
+//email already exists case X
+//found token but can't get profile case X
+//auto refresh token - token expired -> 401 / refresh token expired(or else) -> 403 X
+//await api calls before going to homescreen X
 
 @RoutePage()
 class SignUpScreen extends StatelessWidget {

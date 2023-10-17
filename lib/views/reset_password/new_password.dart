@@ -59,21 +59,17 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
         systemController.showLoading();
 
         await authController.changePassword(context, password).then(
-              (value) => {
-                context.router.replace(const HomeRoute()),
-                systemController.showSuccess('Password Changed')
-              },
+              (value) => {context.router.replace(const HomeRoute()), systemController.showSuccess('Password Changed')},
             );
       } on FirebaseAuthException catch (e) {
-        print('retype password: $e');
+        debugPrint('retype password: $e');
       } catch (_) {
         systemController.dismiss();
         rethrow;
       }
     }
 
-    ReactiveForm retypePasswordForm(
-        FormGroup form, TextEditingController password, BuildContext context) {
+    ReactiveForm retypePasswordForm(FormGroup form, TextEditingController password, BuildContext context) {
       return ReactiveForm(
         formGroup: form,
         child: Column(
@@ -128,8 +124,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
 
   Center errorMessage(BuildContext context) {
     return Center(
-      child: Text(context.watch<AuthController>().errorMessage ?? '',
-          style: CustomTextStyle.errorText(context)),
+      child: Text(context.watch<AuthController>().errorMessage ?? '', style: CustomTextStyle.errorText(context)),
     );
   }
 

@@ -28,7 +28,7 @@ class EmailVerificationController {
         systemController.showSuccess('Code sent.');
       });
     } catch (ex) {
-      print('fuck! $ex');
+      debugPrint('fuck! $ex');
     } finally {
       systemController.dismiss();
     }
@@ -54,7 +54,7 @@ class EmailVerificationController {
         }
       });
     } catch (ex) {
-      print('fuck! $ex');
+      debugPrint('fuck! $ex');
     } finally {
       systemController.dismiss();
     }
@@ -74,7 +74,6 @@ class EmailVerificationController {
     final client = RestClient(_dio);
     try {
       final code = {"code": userInput};
-      print(code);
       await client.apiVerifyCode(code).then((value) {
         _logger.i('Verification complete');
       });

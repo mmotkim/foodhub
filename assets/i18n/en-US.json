@@ -39,6 +39,7 @@
     "authVerificationBottom": "I didn't receive a link!",
     "authVerificationBottomAction": "Please resend",
     "authVerificationError": "You entered a wrong code, please recheck",
+    "codeVerificationBottom": "I didn't receive an email!",
     "resetPassword": "Reset password",
     "resetPasswordBody": "Please enter your email address to request a password reset",
     "resetPasswordAction": "Send new password",

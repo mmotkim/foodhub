@@ -27,8 +27,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         completed = true;
       });
       final authProvider = Provider.of<AuthController>(context, listen: false);
-      print('HI');
-      print(authProvider.errorMessage);
+      debugPrint(authProvider.errorMessage);
       if (completed && authProvider.errorMessage == null) {
         Future.delayed(const Duration(seconds: 1), () {
           // Navigator.of(context).pushAndRemoveUntil(

@@ -102,7 +102,6 @@ class _PhoneScreenState extends State<PhoneScreen> {
   }
 
   Future<void> _handleSubmit() async {
-    print(phoneController.text);
 
     AuthController authController =
         Provider.of<AuthController>(context, listen: false);
@@ -111,9 +110,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
       final phoneNumberObj =
           form.value.values.firstWhereOrNull((element) => true) as PhoneNumber;
 
-      print('$phoneNumberObj FUCKTARD');
       final phoneNumber = '+${phoneNumberObj.countryCode}${phoneNumberObj.nsn}';
-      print(phoneNumber);
       context.router.push(const VerificationRoute());
 
       await authController.signInWithPhone(context, phoneNumber);

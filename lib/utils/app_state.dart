@@ -1,10 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider, PhoneAuthProvider;
 // import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:foodhub/auth/controllers/api_auth_controller.dart';
 import 'package:foodhub/database/prefs_provider.dart';
 import 'package:foodhub/models/user_entity.dart';
-import 'package:logger/logger.dart';
+import 'package:foodhub/system/system_controller.dart';
 import 'package:provider/provider.dart';
 
 class ApplicationState extends ChangeNotifier {
@@ -32,7 +33,7 @@ class ApplicationState extends ChangeNotifier {
 
   void switchAuth(bool value) {
     useFirebaseAuth = value;
-    print('useFirebaseAuth: $value');
+    debugPrint('Use Firebase Auth: $value');
     notifyListeners();
   }
 
@@ -69,7 +70,6 @@ class ApplicationState extends ChangeNotifier {
               debugPrint('LOGGED IN GOT DAMMIT');
               final providerName = await getProviderName(user);
               if (!user.emailVerified && providerName == 'Email/Password') {
-                print('$providerName provider name in init');
                 _needMailVerify = true;
                 debugPrint('EMAIL NEED VERIFICATION GOT DAMMIT');
               }
@@ -79,16 +79,10 @@ class ApplicationState extends ChangeNotifier {
             }
           })
         : {
-            setLoggedIn = true,
-            Logger().i('API LOGGED IN'),
             if (context != null)
               {
                 WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-                  await context.read<ApiAuthController>().getProfile().then((value) => {
-                        setNeedMailVerify = !value.isVerifiedEmail,
-                        Logger().i('Need mail verify?: $needMailVerify'),
-                        notifyListeners(),
-                      });
+                  await _getProfile(context);
                 })
               }
           };
@@ -100,6 +94,37 @@ class ApplicationState extends ChangeNotifier {
     //     userData = value;
     //     notifyListeners();
     //   });
+  }
+
+  Future<void> _getProfile(BuildContext context) async {
+    final sysController = context.read<SystemController>();
+    final apiController = context.read<ApiAuthController>();
+    try {
+      //case 401 token expired
+      // await PrefsProvider.saveToken(
+      //     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiY3VzdG9tIHRva2VuIiwiaWF0IjoxNjk3NTEwMjcxLCJleHAiOjE2OTc1MTAyOTF9.Ifq037zGT5Kp25CzIUcgvps2I9YuTwJjuXnttrJn-nk');
+      //case 403 refreshToken also expired
+      // await PrefsProvider.saveRefreshToken('69420');
+
+      await apiController
+          .getProfile()
+          .then((value) => {
+                setLoggedIn = true,
+                setNeedMailVerify = !value.isVerifiedEmail,
+                notifyListeners(),
+              })
+          .catchError((err) {
+        throw err;
+      });
+    } on DioException catch (e) {
+      sysController.handleDioException(e);
+
+      setLoggedIn = false;
+      notifyListeners();
+    } catch (e) {
+      setLoggedIn = false;
+      notifyListeners();
+    }
   }
 
   Future<String?> getProviderName(user) async {
@@ -121,7 +146,6 @@ class ApplicationState extends ChangeNotifier {
       }
       return null; // User is not authenticated with any known provider
     } catch (e) {
-      print('Error getting provider name: $e');
       return null; // Handle errors gracefully
     }
   }

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foodhub/api/custom_interceptor.dart';
@@ -15,7 +13,6 @@ import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class ApiAuthController extends ChangeNotifier {
-  final _sys = SystemController();
   final _logger = Logger();
   final _dio = Dio()..interceptors.add(CustomInterceptor());
   UserEntity? _userData;
@@ -26,7 +23,7 @@ class ApiAuthController extends ChangeNotifier {
     late final UserResponseEntity userResponseEntity;
     try {
       userResponseEntity = await client.apiSignUp(userSignUp);
-    } on DioException catch (e) {
+    } on DioException {
       rethrow;
     }
 
@@ -47,7 +44,7 @@ class ApiAuthController extends ChangeNotifier {
     late final UserResponseEntity userResponseEntity;
     try {
       userResponseEntity = await client.apiSignIn(userData);
-    } on DioException catch (e) {
+    } on DioException {
       rethrow;
     }
     final userEntity = userResponseEntity.results;
@@ -103,29 +100,25 @@ class ApiAuthController extends ChangeNotifier {
     }
   }
 
-  Future<TokenEntity> refreshToken() async {
+  Future<TokenEntity?> refreshToken() async {
     final client = RestClient(_dio);
-    final TokenResponseEntity tokenResponseEntity;
+    final TokenResponseEntity? tokenResponseEntity;
     try {
-      tokenResponseEntity = await client.apiResetToken().catchError(
-        (obj) {
-          if (obj.runtimeType == DioException) {
-            final res = (obj as DioException).response;
-            _logger.e('Dio Your Ex: ${res?.statusCode} -> ${res?.statusMessage}');
-          } else {
-            throw Exception(obj.toString());
-          }
-        },
-      );
-    } catch (e) {
+      tokenResponseEntity = await client.apiResetToken();
+    } on DioException catch (e) {
       _logger.e(e);
+      return null;
+    } catch (e) {
+      _logger.e('unexpected error: $e');
       rethrow;
     }
 
-    final tokenEntity = tokenResponseEntity.tokenEntity;
+    final tokenEntity = tokenResponseEntity?.results;
 
     //save tokens
-    await PrefsProvider.saveTokens(tokenEntity.token, tokenEntity.refreshToken);
+    if (tokenEntity != null) {
+      await PrefsProvider.saveTokens(tokenEntity.token, tokenEntity.refreshToken);
+    }
 
     return tokenEntity;
   }

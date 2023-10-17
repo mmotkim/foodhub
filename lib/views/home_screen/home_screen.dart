@@ -47,43 +47,45 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Size size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            SizedBox(
-              height: size.height,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 26),
-                //Get user provider
-                child: FutureBuilder<String?>(
-                  future: _provider,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      systemController.showLoading();
-                      return const SizedBox(height: 20);
-                    } else if (snapshot.hasData) {
-                      systemController.dismiss();
-                      provider = snapshot.data!;
-                      print(snapshot.data!);
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: _homeContent(context),
-                      );
-                    } else if (snapshot.hasError) {
-                      systemController.dismiss();
-                      return Text(snapshot.error.toString());
-                    } else {
-                      systemController.showLoading();
-                      return const SizedBox(height: 20);
-                    }
-                  },
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: Stack(
+            children: [
+              SizedBox(
+                height: size.height,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 26),
+                  //Get user provider
+                  child: FutureBuilder<String?>(
+                    future: _provider,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        systemController.showLoading();
+                        return const SizedBox(height: 20);
+                      } else if (snapshot.hasData) {
+                        systemController.dismiss();
+                        provider = snapshot.data!;
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: _homeContent(context),
+                        );
+                      } else if (snapshot.hasError) {
+                        systemController.dismiss();
+                        return Text(snapshot.error.toString());
+                      } else {
+                        systemController.showLoading();
+                        return const SizedBox(height: 20);
+                      }
+                    },
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

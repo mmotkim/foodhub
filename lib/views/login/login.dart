@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:foodhub/gen/locale_keys.g.dart';
 import 'package:foodhub/gen/assets.gen.dart';
 import 'package:foodhub/styles/custom_texts.dart';
-import 'package:foodhub/utils/authSwitcher.dart';
+import 'package:foodhub/utils/auth_switcher.dart';
 import 'package:foodhub/views/login/login_form.dart';
 import '../../components/back_button.dart';
 

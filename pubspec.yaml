@@ -67,6 +67,7 @@ dependencies:
   json_annotation: ^4.8.1
   flutter_secure_storage: ^9.0.0
   either_dart: ^1.0.0
+  hidden_drawer_menu: ^3.0.1
 
   
 

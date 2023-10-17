@@ -8,14 +8,13 @@ part of 'token_response_entity.dart';
 
 TokenResponseEntity _$TokenResponseEntityFromJson(Map<String, dynamic> json) =>
     TokenResponseEntity(
-      tokenEntity:
-          TokenEntity.fromJson(json['tokenEntity'] as Map<String, dynamic>),
+      results: TokenEntity.fromJson(json['results'] as Map<String, dynamic>),
       msg: json['msg'] as String,
     );
 
 Map<String, dynamic> _$TokenResponseEntityToJson(
         TokenResponseEntity instance) =>
     <String, dynamic>{
-      'tokenEntity': instance.tokenEntity,
+      'results': instance.results,
       'msg': instance.msg,
     };

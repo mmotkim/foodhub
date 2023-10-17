@@ -80,7 +80,7 @@ class _EmailSentApiScreenState extends State<EmailSentApiScreen> with WidgetsBin
 
   Future<void> _checkVerified(Timer timer) async {
     await _authController.getProfile().then((value) {
-      print('Periodical Email verified: ${_authController.getUserData()!.isVerifiedEmail}');
+      debugPrint('Periodical Email verified: ${_authController.getUserData()!.isVerifiedEmail}');
       if (_authController.getUserData()!.isVerifiedEmail) {
         timer.cancel();
         context.router.replaceAll([const HomeRoute()]);

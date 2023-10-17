@@ -130,7 +130,7 @@ class _CodeInputFormState extends State<CodeInputForm> with WidgetsBindingObserv
   Center bottomHelpText(BuildContext context) {
     return Center(
       child: BottomHelpText.light(
-        text: '${LocaleKeys.authVerificationBottom.tr()} ',
+        text: '${LocaleKeys.codeVerificationBottom.tr()} ',
         actionText: LocaleKeys.authVerificationBottomAction.tr(),
         onPressed: () async {
           EmailVerificationController().requestEmailConfirmation(context, widget.email);

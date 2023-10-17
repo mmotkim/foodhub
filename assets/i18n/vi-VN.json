@@ -39,6 +39,7 @@
     "authVerificationBottom": "Tôi không nhận được mail!",
     "authVerificationBottomAction": "Vui lòng gửi lại",
     "authVerificationError": "Bạn đã nhập sai mã, vui lòng kiểm tra lại",
+    "codeVerificationBottom": "Tôi không nhận được mail!",
     "resetPassword": "Đặt lại mật khẩu",
     "resetPasswordBody": "Vui lòng nhập địa chỉ email của bạn để yêu cầu đặt lại mật khẩu",
     "resetPasswordAction": "Gửi mật khẩu mới",

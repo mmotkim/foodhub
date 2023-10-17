@@ -106,17 +106,17 @@ class _MyAppState extends State<MyApp> {
   // }
 
   Future<void> backgroundHandler() async {
-    print('terminated message:');
+    debugPrint('terminated message:');
     await PrefsProvider.printCustom('terminated2');
 
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage(); //terminated
     if (initialMessage != null) {
       await PrefsProvider.saveCustom('terminated2', initialMessage.data.toString());
-      // WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      //   Future.delayed(const Duration(seconds: 5), () async {
-      //     await context.router.push(const LoginRoute());
-      //   });
-      // });
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+        Future.delayed(const Duration(seconds: 2), () async {
+          await context.router.push(const LoginRoute());
+        });
+      });
     }
   }
 

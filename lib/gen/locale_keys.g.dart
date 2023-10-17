@@ -41,6 +41,7 @@ abstract class  LocaleKeys {
   static const authVerificationBottom = 'authVerificationBottom';
   static const authVerificationBottomAction = 'authVerificationBottomAction';
   static const authVerificationError = 'authVerificationError';
+  static const codeVerificationBottom = 'codeVerificationBottom';
   static const resetPassword = 'resetPassword';
   static const resetPasswordBody = 'resetPasswordBody';
   static const resetPasswordAction = 'resetPasswordAction';

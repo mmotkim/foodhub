@@ -17,7 +17,7 @@ class PrefsProvider {
     _prefs = await SharedPreferences.getInstance();
     AndroidOptions _getAndroidOptions() => const AndroidOptions(
           encryptedSharedPreferences: true,
-        );
+        );  
     _storage = FlutterSecureStorage(aOptions: _getAndroidOptions());
   }
 
@@ -26,7 +26,7 @@ class PrefsProvider {
   }
 
   static Future<void> printCustom(String key) async {
-    print(_prefs.getString(key));
+    debugPrint(_prefs.getString(key));
   }
 
   static Future<String?> getCustom(String key) async {
@@ -42,14 +42,14 @@ class PrefsProvider {
   static Future<void> saveRefreshToken(String token) async {
     // await _prefs.setString('refresh_token', jsonEncode(token));
     await _storage.write(key: _refreshToken, value: token);
-    Logger().i('Mmøtkim: Token: $token Saved');
+    Logger().i('Mmøtkim: Refresh Token: $token Saved');
   }
 
   static Future<void> saveTokens(String token, String refreshtoken) async {
     // await _prefs.setString('token', jsonEncode(token));
     // await _prefs.setString('refresh_token', jsonEncode(token));
     await _storage.write(key: _token, value: token);
-    await _storage.write(key: refreshtoken, value: refreshtoken);
+    await _storage.write(key: _refreshToken, value: refreshtoken);
   }
 
   static Future<void> saveUserId(String userId) async {

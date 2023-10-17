@@ -72,13 +72,13 @@ class _LoginFormState extends State<LoginForm> {
           if (value.isVerifiedEmail) {
             context.router.push(const HomeRoute());
           } else {
-            await EmailVerificationController().requestEmailConfirmation(context, email);
+            // await EmailVerificationController().requestEmailConfirmation(context, email);
             WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
               context.router.push(VerifyCodeRoute(email: email, isLoggedIn: true));
             });
           }
         });
-        systemController.showSuccess(LocaleKeys.done);
+        // systemController.showSuccess(LocaleKeys.done);
       });
     } on DioException catch (e) {
       appState.setErrorMessage(systemController.handleDioException(e));

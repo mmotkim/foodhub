@@ -44,31 +44,37 @@ class SystemController extends ChangeNotifier {
     final statusCode = error.response?.statusCode;
     final uri = error.requestOptions.path;
     final data = jsonEncode(error.response?.data);
-    final _logger = Logger();
+    final logger = Logger();
 
-    _logger.e('My man.. Code $statusCode, Uri $uri, and Data $data');
+    logger.e('My man.. Code $statusCode, Uri $uri, and Data $data');
 
     if (statusCode == 500 && uri.contains('verify-code')) {
-      showError('Incorrect code');
-      return 'Incorrect code';
+      showError(LocaleKeys.errorWrongOTP.tr());
+      return LocaleKeys.errorWrongOTP.tr();
     } else if (data.contains('Account information is incorrect')) {
-      showError('Incorrect login details');
-      return 'Incorrect login details';
+      showError(LocaleKeys.errorWrongCredentials.tr());
+      return LocaleKeys.errorWrongCredentials.tr();
     } else if (data.contains('must be a valid email')) {
-      showError('Invalid email address');
-      return 'Invalid email address';
+      showError(LocaleKeys.emailWrongFormat.tr());
+      return LocaleKeys.emailWrongFormat.tr();
     } else if (data.contains('Email was registered!')) {
-      showError('Email already registered');
-      return 'Email already registered';
+      showError(LocaleKeys.errorEmailInUse.tr());
+      return LocaleKeys.errorEmailInUse.tr();
+    } else if (statusCode == 401) {
+      showError('Unauthorized');
+      return 'Unauthorized';
+    } else if (statusCode == 403 && uri.contains('refresh-token')) {
+      showError('Your session expired, please login again');
+      return 'Sesssion Expired';
     } else {
-      showError('unhandled.. fuck.');
-      return 'unhandled.. fuck.';
+      showError("Something isn't right.. Try again later");
+      return "Something isn't right.. Try again later";
     }
   }
 
   void handleArgumentError(ArgumentError e) {
-    print(e.name);
-    print(e.message);
+    debugPrint(e.name);
+    debugPrint(e.message);
 
     if (e.name != null) {
       showError(e.name!);

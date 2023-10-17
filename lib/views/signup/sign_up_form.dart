@@ -49,6 +49,7 @@ class _SignUpFormState extends State<SignUpForm> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<AuthController>().clearErrorMessage();
+      context.read<ApplicationState>().clearErrorMessage();
     });
   }
 

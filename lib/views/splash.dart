@@ -20,9 +20,8 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    super.initState();
-
     _init();
+    super.initState();
   }
 
   @override
@@ -65,43 +64,38 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _init() async {
     final appState = Provider.of<ApplicationState>(context, listen: false);
-    context.read<AuthController>().signOut();
+    late final bool loggedIn;
     String email = '';
 
     try {
-      appState.init(context).then((value) {
-        Future.delayed(
-            const Duration(seconds: 2),
-            () => {
-                  if (appState.loggedIn)
-                    {
-                      if (appState.useFirebaseAuth)
-                        {
-                          if (appState.needMailVerify)
-                            {
-                              email = Provider.of<AuthController>(context, listen: false).getCurrentUser()!.email!,
-                              _pushToEmailSent(email),
-                            }
-                          else //Firebase + email verified
-                            {
-                              context.router.replace(HomeRoute()),
-                            }
-                        }
-                      else
-                        {
-                          //USING API AUTH
-                          if (appState.needMailVerify) // API + email not verified
-                            {
-                              email = Provider.of<ApiAuthController>(context, listen: false).getUserData()!.email,
-                              _pushToApiEmailSent(email),
-                            }
-                          else //API + email verified
-                            {context.router.replace(HomeRoute())}
-                        }
-                    }
-                  else // NOT LOGGED IN
-                    {context.router.replace(WelcomeRoute())}
-                });
+      await appState.init(context).then((value) {
+        Future.delayed(const Duration(seconds: 2), () async {
+          loggedIn = context.read<ApplicationState>().loggedIn;
+          if (mounted && loggedIn) {
+            if (appState.useFirebaseAuth) {
+              if (appState.needMailVerify) {
+                email = Provider.of<AuthController>(context, listen: false).getCurrentUser()!.email!;
+                _pushToEmailSent(email);
+              } else //Firebase + email verified
+              {
+                context.router.replace(HomeRoute());
+              }
+            } else {
+              //USING API AUTH
+              if (appState.needMailVerify) // API + email not verified
+              {
+                email = Provider.of<ApiAuthController>(context, listen: false).getUserData()!.email;
+                _pushToApiEmailSent(email);
+              } else //API + email verified
+              {
+                context.router.replace(HomeRoute());
+              }
+            }
+          } else if (mounted && !loggedIn) // NOT LOGGED IN
+          {
+            context.router.replace(WelcomeRoute());
+          }
+        });
       });
     } catch (_) {
       print(_);
